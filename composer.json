@@ -1,0 +1,27 @@
+{
+    "name": "jacksleight/statamic-distill",
+    "autoload": {
+        "psr-4": {
+            "JackSleight\\StatamicDistill\\": "src"
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Distill",
+            "description": ""
+        },
+        "laravel": {
+            "providers": [
+                "JackSleight\\StatamicDistill\\ServiceProvider"
+            ]
+        }
+    },
+    "require": {
+        "statamic/cms": "^3.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    }
+}
