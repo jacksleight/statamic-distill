@@ -8,12 +8,14 @@
 
 <!-- /statamic:hide -->
 
-This Statamic addon allows you to run queries against the flat and nested values within your entries, like the data a page builder might generate. Some examples of what’s possible:
+This Statamic addon allows you to query or index the individual values and sets within your entries, from both top-level and deeply nested fields.
 
-* Extract the text from all Bard fields within a page builder, or just the headings
-* Find every asset in a replicator, or just the first image
-* Merge similar field values from different sets together 
-* Filter, sort and paginate a grid field just like you can with a collection
+This is useful for things like:
+
+* Extracting all of the text from multiple nested bard fields
+* Adding individual sections of a page to your search index
+* Finding every asset referenced in a replicator, or just the first image
+* Filtering, sorting and paginating a grid field just like you can with a collection
 
 ## Installation
 
@@ -22,3 +24,11 @@ You can search for this addon in the `Tools > Addons` section of the Statamic co
 ```bash
 composer require jacksleight/statamic-distill
 ```
+
+## Examples
+
+## Usage
+
+### Optimisation
+
+By default Distill will walk through the entire value and into many fieldtypes. Whenever possible you should use the `limit`, `depth`, `length` and `expand` parameters to restrict how far it goes. For example, the `limit` parameter doesn’t just slice the final result set, it tells Distill to stop when enough results have been found.

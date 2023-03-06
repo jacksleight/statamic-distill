@@ -2,9 +2,7 @@
 
 namespace JackSleight\StatamicDistill;
 
-use Statamic\Fields\Value;
 use Statamic\Query\IteratorBuilder;
-use Statamic\Support\Str;
 
 class Distiller extends IteratorBuilder
 {
@@ -13,6 +11,8 @@ class Distiller extends IteratorBuilder
     const TYPE_TERM = 'term';
 
     const TYPE_ASSET = 'asset';
+
+    const TYPE_USER = 'user';
 
     const TYPE_FIELD = 'field';
 
@@ -30,13 +30,13 @@ class Distiller extends IteratorBuilder
 
     const FIELDTYPE_ASSETS = 'assets';
 
+    const FIELDTYPE_USERS = 'users';
+
     const FIELDTYPE_REPLICATOR = 'replicator';
 
     const FIELDTYPE_BARD = 'bard';
 
     const FIELDTYPE_GRID = 'grid';
-
-    protected $walker;
 
     protected $from;
 
@@ -44,9 +44,15 @@ class Distiller extends IteratorBuilder
 
     protected $path;
 
+    protected $includeRoot = false;
+
+    protected $maxDepth;
+
+    protected $expand;
+
     public function __construct()
     {
-        $this->walker = new Walker($this);
+        $this->expand = $this->typeRegex('*');
 
         return $this;
     }
@@ -58,50 +64,44 @@ class Distiller extends IteratorBuilder
         return $this;
     }
 
-    public function type($type)
+    public function type($value)
     {
-        if (! is_array($type)) {
-            $type = explode('|', $type);
-        }
-
-        $regex = collect($type)
-            ->map(fn ($type) => ! Str::endsWith($type, '::*') ? "{$type}::*" : $type)
-            ->map(function ($type) {
-                return collect(preg_split('/(\*)/', $type, -1, PREG_SPLIT_DELIM_CAPTURE))
-                    ->map(fn ($part) => $part === '*' ? '[^\:]*' : preg_quote($part, '/'))
-                    ->join('');
-            })
-            ->join('|');
-
-        $this->type = "/^{$regex}/";
+        $this->type = $this->typeRegex($value);
 
         return $this;
     }
 
-    public function path($path)
+    public function path($value)
     {
-        if (! is_array($path)) {
-            $path = explode('|', $path);
-        }
+        $this->path = $this->pathRegex($value);
 
-        $regex = collect($path)
-            ->map(function ($path) {
-                return collect(preg_split('/(\*)/', $path, -1, PREG_SPLIT_DELIM_CAPTURE))
-                    ->map(fn ($part) => $part === '*' ? '[^\.]*' : preg_quote($part, '/'))
-                    ->join('');
-            })
-            ->join('|');
+        return $this;
+    }
 
-        $this->path = "/^{$regex}$/";
+    public function includeRoot($value)
+    {
+        $this->includeRoot = $value;
+
+        return $this;
+    }
+
+    public function maxDepth($value)
+    {
+        $this->maxDepth = $value;
+
+        return $this;
+    }
+
+    public function expand($value)
+    {
+        $this->expand = $this->typeRegex($value);
 
         return $this;
     }
 
     protected function getBaseItems()
     {
-        $items = $this->walker->walk($this->from);
-
-        return $this->collect($items);
+        return (new Collector($this))->collect($this->from);
     }
 
     protected function getFilteredItems()
@@ -111,40 +111,86 @@ class Distiller extends IteratorBuilder
         return $items;
     }
 
-    public function shouldContinue($overrun = false)
+    public function shouldCollect($item, $depth)
     {
-        if (! isset($this->limit)) {
-            return true;
+        if (! $this->includeRoot && $depth === 0) {
+            return false;
         }
 
-        $limit = $this->offset + $this->limit;
-
-        if ($overrun) {
-            $limit++;
+        if (isset($this->type) && ! preg_match($this->type, $item['type'])) {
+            return false;
         }
 
-        return count($this->walker->items) < $limit;
+        if (isset($this->path) && ! preg_match($this->path, $item['path'])) {
+            return false;
+        }
+
+        if (count($this->wheres) && ! $this->filterWheres(collect([$item['data']]))->count()) {
+            return false;
+        }
+
+        return true;
     }
 
-    public function shouldInclude($item)
+    public function shouldExpand($item, $depth)
     {
-        if ($this->type && ! preg_match($this->type, $item['type'])) {
+        if (isset($this->maxDepth) && $depth >= $this->maxDepth) {
             return false;
         }
 
-        if ($this->path && ! preg_match($this->path, $item['path'])) {
+        if (isset($this->expand) && ! preg_match($this->expand, $item['type'])) {
             return false;
         }
 
-        if ($this->wheres) {
-            if ($item['value'] instanceof Value) {
-                return false;
-            }
-            if (! $this->filterWheres(collect([$item['value']]))->count()) {
+        return true;
+    }
+
+    public function shouldContinue($count)
+    {
+        if (isset($this->limit)) {
+            if ($count >= $this->offset + $this->limit) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    protected function typeRegex($value)
+    {
+        if (! is_array($value)) {
+            $value = explode('|', $value);
+        }
+
+        $regex = [];
+        foreach ($value as $item) {
+            $parts = preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $match = [];
+            foreach ($parts as $part) {
+                $match[] = $part === '*' ? '[^\:]*' : preg_quote($part, '/');
+            }
+            $regex[] = implode('', $match).'(\:\:.*)?';
+        }
+
+        return '/^'.implode('|', $regex).'$/';
+    }
+
+    protected function pathRegex($value)
+    {
+        if (! is_array($value)) {
+            $value = explode('|', $value);
+        }
+
+        $regex = [];
+        foreach ($value as $item) {
+            $parts = preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE);
+            $match = [];
+            foreach ($parts as $part) {
+                $match[] = $part === '*' ? '[^\.]*' : preg_quote($part, '/');
+            }
+            $regex[] = implode('', $match);
+        }
+
+        return '/^'.implode('|', $regex).'$/';
     }
 }
