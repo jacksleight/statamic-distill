@@ -147,10 +147,8 @@ class Distiller extends IteratorBuilder
 
     public function shouldContinue($count)
     {
-        if (isset($this->limit)) {
-            if ($count >= $this->offset + $this->limit) {
-                return false;
-            }
+        if (isset($this->limit) && $count >= $this->offset + $this->limit) {
+            return false;
         }
 
         return true;
