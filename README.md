@@ -31,4 +31,4 @@ composer require jacksleight/statamic-distill
 
 ### Optimisation
 
-By default Distill will walk through the entire value and into many fieldtypes. Whenever possible you should use the `limit`, `depth`, `length` and `expand` parameters to restrict how far it goes. For example, the `limit` parameter doesn’t just slice the final result set, it tells Distill to stop when enough results have been found.
+By default Distill will gather everything it can from the value you provide. Whenever possible you should use the `limit`, `depth`, `length` and `expand` parameters to restrict how far it goes. For example, the `limit` parameter doesn’t just slice the final result set, it tells Distill to stop when enough results have been found.
