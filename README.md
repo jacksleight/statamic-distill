@@ -12,10 +12,10 @@ This Statamic addon allows you to query or index the individual values, sets and
 
 This is useful for things like:
 
-* Extracting all of the text from multiple nested bard fields
+* Extracting all the text from multiple nested Bard fields
 * Adding individual sections of a page to your search index
-* Finding every asset referenced in a replicator, or just the first image
-* Filtering, sorting and paginating a grid field just like you can with a collection
+* Finding every asset referenced in a Replicator, or just the first image
+* Filtering, sorting and paginating a Grid field, just like you can with a collection
 
 ## Installation
 
