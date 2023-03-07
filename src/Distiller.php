@@ -2,7 +2,9 @@
 
 namespace JackSleight\StatamicDistill;
 
+use JackSleight\StatamicDistill\Items\ItemCollection;
 use Statamic\Query\IteratorBuilder;
+use Statamic\Support\Arr;
 
 class Distiller extends IteratorBuilder
 {
@@ -14,7 +16,21 @@ class Distiller extends IteratorBuilder
 
     const TYPE_USER = 'user';
 
-    const TYPE_FIELD = 'field';
+    const TYPE_VALUE = 'value';
+
+    const TYPE_VALUE_ENTRIES = 'value:entries';
+
+    const TYPE_VALUE_TERMS = 'value:terms';
+
+    const TYPE_VALUE_ASSETS = 'value:assets';
+
+    const TYPE_VALUE_USERS = 'value:users';
+
+    const TYPE_VALUE_REPLICATOR = 'value:replicator';
+
+    const TYPE_VALUE_BARD = 'value:bard';
+
+    const TYPE_VALUE_GRID = 'value:grid';
 
     const TYPE_SET = 'set';
 
@@ -24,42 +40,23 @@ class Distiller extends IteratorBuilder
 
     const TYPE_MARK = 'mark';
 
-    const FIELDTYPE_ENTRIES = 'entries';
-
-    const FIELDTYPE_TERMS = 'terms';
-
-    const FIELDTYPE_ASSETS = 'assets';
-
-    const FIELDTYPE_USERS = 'users';
-
-    const FIELDTYPE_REPLICATOR = 'replicator';
-
-    const FIELDTYPE_BARD = 'bard';
-
-    const FIELDTYPE_GRID = 'grid';
-
     protected $from;
 
     protected $type;
 
     protected $path;
 
+    protected $expand;
+
     protected $includeRoot = false;
+
+    protected $minDepth;
 
     protected $maxDepth;
 
-    protected $expand;
-
-    public function __construct()
+    public function __construct($from)
     {
-        $this->expand = $this->typeRegex('*');
-
-        return $this;
-    }
-
-    public function from($value)
-    {
-        $this->from = $value;
+        $this->from = $from;
 
         return $this;
     }
@@ -85,6 +82,21 @@ class Distiller extends IteratorBuilder
         return $this;
     }
 
+    public function depth($value)
+    {
+        $this->minDepth = $value;
+        $this->maxDepth = $value;
+
+        return $this;
+    }
+
+    public function minDepth($value)
+    {
+        $this->minDepth = $value;
+
+        return $this;
+    }
+
     public function maxDepth($value)
     {
         $this->maxDepth = $value;
@@ -101,7 +113,9 @@ class Distiller extends IteratorBuilder
 
     protected function getBaseItems()
     {
-        return (new Collector($this))->collect($this->from);
+        $items = (new Collector($this))->collect($this->from);
+
+        return ItemCollection::make($items);
     }
 
     protected function getFilteredItems()
@@ -117,15 +131,23 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->type) && ! preg_match($this->type, $item['type'])) {
+        if (isset($this->minDepth) && $depth < $this->minDepth) {
             return false;
         }
 
-        if (isset($this->path) && ! preg_match($this->path, $item['path'])) {
+        if (isset($this->maxDepth) && $depth > $this->maxDepth) {
             return false;
         }
 
-        if (count($this->wheres) && ! $this->filterWheres(collect([$item['data']]))->count()) {
+        if (isset($this->type) && ! preg_match($this->type, $item->still->type)) {
+            return false;
+        }
+
+        if (isset($this->path) && ! preg_match($this->path, $item->still->path)) {
+            return false;
+        }
+
+        if (count($this->wheres) && ! $this->filterWheres(collect([$item]))->count()) {
             return false;
         }
 
@@ -138,7 +160,7 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->expand) && ! preg_match($this->expand, $item['type'])) {
+        if (isset($this->expand) && ! preg_match($this->expand, $item->still->type)) {
             return false;
         }
 
@@ -147,6 +169,10 @@ class Distiller extends IteratorBuilder
 
     public function shouldContinue($count)
     {
+        if (count($this->orderBys)) {
+            return true;
+        }
+
         if (isset($this->limit) && $count >= $this->offset + $this->limit) {
             return false;
         }
@@ -156,18 +182,11 @@ class Distiller extends IteratorBuilder
 
     protected function typeRegex($value)
     {
-        if (! is_array($value)) {
-            $value = explode('|', $value);
-        }
-
         $regex = [];
-        foreach ($value as $item) {
-            $parts = preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE);
-            $match = [];
-            foreach ($parts as $part) {
-                $match[] = $part === '*' ? '[^\:]*' : preg_quote($part, '/');
-            }
-            $regex[] = implode('', $match).'(\:\:.*)?';
+        foreach (Arr::wrap($value) as $item) {
+            $regex[] = collect(preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE))
+                ->map(fn ($part) => $part === '*' ? '.*' : preg_quote($part, '/'))
+                ->join('');
         }
 
         return '/^'.implode('|', $regex).'$/';
@@ -175,18 +194,11 @@ class Distiller extends IteratorBuilder
 
     protected function pathRegex($value)
     {
-        if (! is_array($value)) {
-            $value = explode('|', $value);
-        }
-
         $regex = [];
-        foreach ($value as $item) {
-            $parts = preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE);
-            $match = [];
-            foreach ($parts as $part) {
-                $match[] = $part === '*' ? '[^\.]*' : preg_quote($part, '/');
-            }
-            $regex[] = implode('', $match);
+        foreach (Arr::wrap($value) as $item) {
+            $regex[] = collect(preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE))
+                ->map(fn ($part) => $part === '*' ? '[^\.]*' : preg_quote($part, '/'))
+                ->join('');
         }
 
         return '/^'.implode('|', $regex).'$/';

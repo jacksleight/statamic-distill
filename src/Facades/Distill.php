@@ -8,6 +8,6 @@ class Distill extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \JackSleight\StatamicDistill\Distiller::class;
+        return \JackSleight\StatamicDistill\Distill::class;
     }
 }

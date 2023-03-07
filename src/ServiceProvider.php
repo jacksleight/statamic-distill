@@ -10,6 +10,9 @@ use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
 {
+    protected $tags = [
+        Tags\Distill::class,
+    ];
 }
 
 function distill($value)
@@ -19,6 +22,7 @@ function distill($value)
     $user = User::findByEmail('hi@jacksleight.com');
 
     $data = Distill::from($value)
+        ->type('node')
         ->get();
 
     dd($data->all());

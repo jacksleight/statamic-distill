@@ -8,14 +8,12 @@
 
 <!-- /statamic:hide -->
 
-This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields.
-
-This is useful for things like:
+This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. This is useful for things like:
 
 * Extracting all the text from multiple nested Bard fields
 * Adding individual sections of a page to your search index
 * Finding every asset referenced in a Replicator, or just the first image
-* Filtering, sorting and paginating a Grid field, just like you can with a collection
+* Filtering, sorting and paginating a Grid field just like a collection
 
 ## Installation
 
@@ -31,4 +29,6 @@ composer require jacksleight/statamic-distill
 
 ### Optimisation
 
-By default Distill will walk through the entire hierachy looking for items that match your criteria. Whenever possible you should use the `limit`, `depth`, `length` and `expand` parameters to restrict how far it goes. For example, the `limit` parameter doesn’t just slice the final result set, it tells Distill to stop when enough results have been found.
+By default Distill will walk through the entire value looking for items that match your criteria. You should use the `from`, `expand`, `limit` and `max_depth` parameters to restrict how far it goes based on what you're looking for. These options don't just filter the final result, they tell Distill when to stop looking.
+
+Distill can find references to other entries, terms, assets and users, but it will not recursively walk into those objects.
