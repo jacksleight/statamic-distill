@@ -8,7 +8,7 @@
 
 <!-- /statamic:hide -->
 
-This Statamic addon allows you to query or index the individual values and sets within your entries, from both top-level and deeply nested fields.
+This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields.
 
 This is useful for things like:
 
