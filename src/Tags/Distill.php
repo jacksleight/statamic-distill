@@ -40,7 +40,7 @@ class Distill extends Tags
         $this->params->put('type', 'value:bard');
 
         return $this->items()->get()
-            ->map->get('value')
+            ->map->value
             ->map->raw()
             ->flatten(1)
             ->all();

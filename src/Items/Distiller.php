@@ -1,8 +1,7 @@
 <?php
 
-namespace JackSleight\StatamicDistill;
+namespace JackSleight\StatamicDistill\Items;
 
-use JackSleight\StatamicDistill\Items\ItemCollection;
 use Statamic\Query\IteratorBuilder;
 use Statamic\Support\Arr;
 
@@ -46,6 +45,8 @@ class Distiller extends IteratorBuilder
 
     protected $path;
 
+    protected $chunks;
+
     protected $expand;
 
     protected $includeRoot = false;
@@ -63,14 +64,15 @@ class Distiller extends IteratorBuilder
 
     public function type($value)
     {
-        $this->type = $this->typeRegex($value);
+        $this->type = $this->matchRegex($value, ':');
 
         return $this;
     }
 
     public function path($value)
     {
-        $this->path = $this->pathRegex($value);
+        $this->path = $this->matchRegex($value, '.');
+        $this->chunks = $this->matchRegex($value, '.', true);
 
         return $this;
     }
@@ -106,7 +108,7 @@ class Distiller extends IteratorBuilder
 
     public function expand($value)
     {
-        $this->expand = $this->typeRegex($value);
+        $this->expand = $this->matchRegex($value, ':');
 
         return $this;
     }
@@ -139,11 +141,11 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->type) && ! preg_match($this->type, $item->still->type)) {
+        if (isset($this->type) && ! preg_match($this->type, $item->drop->type)) {
             return false;
         }
 
-        if (isset($this->path) && ! preg_match($this->path, $item->still->path)) {
+        if (isset($this->path) && ! preg_match($this->path, $item->drop->path)) {
             return false;
         }
 
@@ -160,7 +162,11 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->expand) && ! preg_match($this->expand, $item->still->type)) {
+        if (isset($this->expand) && ! preg_match($this->expand, $item->drop->type)) {
+            return false;
+        }
+
+        if (isset($this->chunks) && ! preg_match($this->chunks, $item->drop->path)) {
             return false;
         }
 
@@ -180,27 +186,43 @@ class Distiller extends IteratorBuilder
         return true;
     }
 
-    protected function typeRegex($value)
+    public function shouldTraverse($path)
     {
-        $regex = [];
-        foreach (Arr::wrap($value) as $item) {
-            $regex[] = collect(preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE))
-                ->map(fn ($part) => $part === '*' ? '.*' : preg_quote($part, '/'))
-                ->join('');
+        if (isset($this->maxDepth) && count($path) > $this->maxDepth) {
+            return false;
         }
 
-        return '/^'.implode('|', $regex).'$/';
+        if (isset($this->chunks) && ! preg_match($this->chunks, implode('.', $path))) {
+            return false;
+        }
+
+        return true;
     }
 
-    protected function pathRegex($value)
+    protected function matchRegex($value, $delimiter, $chunks = false)
     {
         $regex = [];
         foreach (Arr::wrap($value) as $item) {
-            $regex[] = collect(preg_split('/(\*)/', $item, -1, PREG_SPLIT_DELIM_CAPTURE))
-                ->map(fn ($part) => $part === '*' ? '[^\.]*' : preg_quote($part, '/'))
+            $regex[] = collect(explode($delimiter, $item))
+                ->map(function ($part) use ($delimiter) {
+                    if ($part === '**') {
+                        return '.*';
+                    } elseif ($part === '*') {
+                        return '[^\\'.$delimiter.']*';
+                    }
+
+                    return preg_quote($part, '/');
+                })
+                ->map(function ($part, $i) use ($delimiter, $chunks) {
+                    if ($chunks) {
+                        return $i ? '(\\'.$delimiter.$part.')?' : '('.$part.')?';
+                    }
+
+                    return $i ? '\\'.$delimiter.$part : $part;
+                })
                 ->join('');
         }
 
-        return '/^'.implode('|', $regex).'$/';
+        return '/^('.implode('|', $regex).')$/';
     }
 }
