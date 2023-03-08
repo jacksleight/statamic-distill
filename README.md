@@ -10,7 +10,7 @@
 
 > **⚠️ Experimental:** This addon is experimental and could change. [Have and idea or suggestion?](https://github.com/jacksleight/statamic-distill/issues).
 
-This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. This is useful for things like:
+This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting all the text from multiple nested Bard fields
 * Adding individual sections of a page to your search index
