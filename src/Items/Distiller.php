@@ -141,11 +141,11 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->type) && ! preg_match($this->type, $item->drop->type)) {
+        if (isset($this->type) && ! preg_match($this->type, $item->drop()->type)) {
             return false;
         }
 
-        if (isset($this->path) && ! preg_match($this->path, $item->drop->path)) {
+        if (isset($this->path) && ! preg_match($this->path, $item->drop()->path)) {
             return false;
         }
 
@@ -162,11 +162,11 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->expand) && ! preg_match($this->expand, $item->drop->type)) {
+        if (isset($this->expand) && ! preg_match($this->expand, $item->drop()->type)) {
             return false;
         }
 
-        if (isset($this->chunks) && ! preg_match($this->chunks, $item->drop->path)) {
+        if (isset($this->chunks) && ! preg_match($this->chunks, $item->drop()->path)) {
             return false;
         }
 

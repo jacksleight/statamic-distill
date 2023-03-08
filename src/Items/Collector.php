@@ -16,7 +16,7 @@ class Collector
 {
     protected $distiller;
 
-    protected $value;
+    protected $root;
 
     public $store = [];
 
@@ -32,6 +32,8 @@ class Collector
         if ($value instanceof Page) {
             $value = $value->entry();
         }
+
+        $this->root = $value;
 
         $this->store = [];
         $this->items = [];
@@ -84,6 +86,7 @@ class Collector
             'path' => $self,
             'name' => ! $indexed ? Arr::last($path) : null,
             'index' => $indexed ? Arr::last($path) : null,
+            'root' => $this->root,
             'parent' => null,
             'prev' => null,
             'next' => null,
@@ -95,14 +98,14 @@ class Collector
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
                 if (isset($this->store[$parent])) {
-                    $this->store[$self]->drop->setParent($this->store[$parent]);
+                    $this->store[$self]->drop()->setParent($this->store[$parent]);
                 }
             }
             if ($path && $indexed) {
                 $prev = implode('.', array_merge(array_slice($path, 0, -1), [Arr::last($path) - 1]));
                 if (isset($this->store[$prev])) {
-                    $this->store[$self]->drop->setPrev($this->store[$prev]);
-                    $this->store[$prev]->drop->setNext($this->store[$self]);
+                    $this->store[$self]->drop()->setPrev($this->store[$prev]);
+                    $this->store[$prev]->drop()->setNext($this->store[$self]);
                 }
             }
         }
@@ -153,8 +156,7 @@ class Collector
             $value = new Item($value);
         }
 
-        $drop = new Drop($drop);
-        $value->setSupplement('drop', $drop);
+        $value->setSupplement('drop', new Drop($drop));
 
         return $value;
     }
