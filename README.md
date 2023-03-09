@@ -44,7 +44,7 @@ composer require jacksleight/statamic-distill
 ### Filter, sort and paginate a Grid field
 
 ```antlers
-{{ distill:parts_list depth="1" paginate="10" :category:is="get:category" :sort="get:sort" }}
+{{ distill:skus depth="1" paginate="10" :category:is="get:category" :sort="get:sort" }}
     {{ items }}
         {{ name }} {{ price }}
     {{ /items }}
@@ -52,10 +52,10 @@ composer require jacksleight/statamic-distill
         <a href="{{ prev_page }}">⬅</a>
         <a href="{{ next_page }}">➡</a>
     {{ /paginate }}
-{{ /distill:parts_list }}
+{{ /distill:skus }}
 ```
 
-### Add sections of a page to a search index
+### Add sections of a page to a search index
 
 ```php
 // config/statamic/search.php
@@ -101,19 +101,21 @@ Distill can find references to other entries, terms, assets and users, but it wi
 
 The `{{ distill:* }}` tag accepts the following parameters:
 
+* **[conditions] (mixed)**  
+  Any [where conditions](https://statamic.dev/conditions).
 * **from (mixed)**  
   The source value.
 * **type (string, array)**  
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
-  * `entry` An entry object
-  * `term` A term object
-  * `asset` An asset object
-  * `user` A user object
   * `value:[fieldtype]` A field value
   * `set:[handle]` A Replicator or Bard set
   * `row` A Grid row
   * `node:[type]` A Bard node
   * `mark:[type]` A Bard mark
+  * `entry` An entry object
+  * `term` A term object
+  * `asset` An asset object
+  * `user` A user object
 * **path (string, array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
@@ -124,25 +126,27 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The maximum depth to find items from.
 * **expand (string, array)**  
   Which types to expand and walk into, defaults to all, options are:
+  * `set:*`
+  * `row`
+  * `value:replicator`
+  * `value:bard`
+  * `value:grid`
   * `value:entries`
   * `value:terms`
   * `value:assets`
   * `value:users`
-  * `value:replicator`
-  * `value:bard`
-  * `value:grid`
-  * `set:*`
-  * `row`
 * **limit (integer)**  
   The maximum number of items.
 * **offset (integer)**  
   The starting item offset.
 * **paginate (integer)**  
-  The numnber of items per page.
+  The number of items per page.
 * **sort (string)**  
   The sort order.
 * **include_root (string)**  
   Whether to include the source value, defaults to false.
+* **still (string)**  
+  Which stills to apply, multiple stills can be pipe delimited.
 
 The query builder class has matching camel cased method names.
 
@@ -154,4 +158,10 @@ The `distill:count` tag returns the number of results from a query.
 
 The `distill:bard` tag returns Bard data only and in a format that is compatible with the `bard_*` modifiers.
 
-### Optimisation
+### Stills
+
+Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by creating a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters.
+
+### Search
+
+Distill allows you to add any individual page items to a search index, so they appear as their own search results. You can then use hash/fragment URLs to link to those pages using set IDs, slugs generated from your content, or some other method. Check out the example above for further details.
