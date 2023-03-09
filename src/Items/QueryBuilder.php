@@ -5,40 +5,8 @@ namespace JackSleight\StatamicDistill\Items;
 use Statamic\Query\IteratorBuilder;
 use Statamic\Support\Arr;
 
-class Distiller extends IteratorBuilder
+class QueryBuilder extends IteratorBuilder
 {
-    const TYPE_ENTRY = 'entry';
-
-    const TYPE_TERM = 'term';
-
-    const TYPE_ASSET = 'asset';
-
-    const TYPE_USER = 'user';
-
-    const TYPE_VALUE = 'value';
-
-    const TYPE_VALUE_ENTRIES = 'value:entries';
-
-    const TYPE_VALUE_TERMS = 'value:terms';
-
-    const TYPE_VALUE_ASSETS = 'value:assets';
-
-    const TYPE_VALUE_USERS = 'value:users';
-
-    const TYPE_VALUE_REPLICATOR = 'value:replicator';
-
-    const TYPE_VALUE_BARD = 'value:bard';
-
-    const TYPE_VALUE_GRID = 'value:grid';
-
-    const TYPE_SET = 'set';
-
-    const TYPE_ROW = 'row';
-
-    const TYPE_NODE = 'node';
-
-    const TYPE_MARK = 'mark';
-
     protected $from;
 
     protected $type;
@@ -141,11 +109,11 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->type) && ! preg_match($this->type, $item->drop()->type)) {
+        if (isset($this->type) && ! preg_match($this->type, $item->drop->type)) {
             return false;
         }
 
-        if (isset($this->path) && ! preg_match($this->path, $item->drop()->path)) {
+        if (isset($this->path) && ! preg_match($this->path, $item->drop->path)) {
             return false;
         }
 
@@ -162,11 +130,11 @@ class Distiller extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->expand) && ! preg_match($this->expand, $item->drop()->type)) {
+        if (isset($this->expand) && ! preg_match($this->expand, $item->drop->type)) {
             return false;
         }
 
-        if (isset($this->chunks) && ! preg_match($this->chunks, $item->drop()->path)) {
+        if (isset($this->chunks) && ! preg_match($this->chunks, $item->drop->path)) {
             return false;
         }
 

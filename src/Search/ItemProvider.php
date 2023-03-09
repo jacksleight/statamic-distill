@@ -20,8 +20,8 @@ class ItemProvider extends Provider
     {
         return collect($keys)
             ->map(function ($key) {
-                $ref = Str::before($key, '#');
-                $path = Str::after($key, '#');
+                $ref = Str::beforeLast($key, '::');
+                $path = Str::afterLast($key, '::');
                 $object = Data::find($ref);
                 $item = Distill::from($object)
                     ->path($path)

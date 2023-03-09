@@ -23,11 +23,6 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
         $this->data = $data;
     }
 
-    public function drop()
-    {
-        return $this->getSupplement('drop');
-    }
-
     public function augmentedArrayData()
     {
         return array_merge($this->supplements(), $this->data);
@@ -35,7 +30,7 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
 
     public function getSearchReference(): string
     {
-        return 'distill::'.$this->drop()->root->reference().'#'.$this->drop()->path;
+        return 'distill::'.$this->drop->source->reference().'::'.$this->drop->path;
     }
 
     public function getSearchValue(string $field)
@@ -45,6 +40,6 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
 
     public function toSearchResult(): ResultContract
     {
-        return new Result($this, 'distill:'.$this->drop()->type);
+        return new Result($this, 'distill:'.$this->drop->type);
     }
 }

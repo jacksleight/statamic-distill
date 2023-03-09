@@ -2,6 +2,7 @@
 
 namespace JackSleight\StatamicDistill\Items;
 
+use JackSleight\StatamicDistill\Distill;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Contracts\Auth\User;
 use Statamic\Contracts\Entries\Entry;
@@ -14,17 +15,17 @@ use Statamic\Support\Arr;
 
 class Collector
 {
-    protected $distiller;
+    protected $query;
 
-    protected $root;
+    protected $value;
 
     public $store = [];
 
     public $items = [];
 
-    public function __construct(Distiller $distiller)
+    public function __construct(QueryBuilder $query)
     {
-        $this->distiller = $distiller;
+        $this->query = $query;
     }
 
     public function collect($value)
@@ -33,12 +34,12 @@ class Collector
             $value = $value->entry();
         }
 
-        $this->root = $value;
+        $this->value = $value;
 
         $this->store = [];
         $this->items = [];
 
-        $this->collectValue($value);
+        $this->collectValue($this->value);
 
         return $this->items;
     }
@@ -49,23 +50,23 @@ class Collector
 
         if (! $type) {
             if ($value instanceof Entry) {
-                $type = Distiller::TYPE_ENTRY;
+                $type = Distill::TYPE_ENTRY;
             } elseif ($value instanceof Term) {
-                $type = Distiller::TYPE_TERM;
+                $type = Distill::TYPE_TERM;
             } elseif ($value instanceof Asset) {
-                $type = Distiller::TYPE_ASSET;
+                $type = Distill::TYPE_ASSET;
             } elseif ($value instanceof User) {
-                $type = Distiller::TYPE_USER;
+                $type = Distill::TYPE_USER;
             } elseif ($value instanceof Value) {
-                $type = Distiller::TYPE_VALUE.':'.optional($value->fieldtype())->handle() ?? 'unknown';
+                $type = Distill::TYPE_VALUE.':'.optional($value->fieldtype())->handle() ?? 'unknown';
             }
         }
 
         $primary = $type;
 
-        if (in_array($type, [Distiller::TYPE_SET])) {
+        if (in_array($type, [Distill::TYPE_SET])) {
             $type .= ':'.$value['type'];
-        } elseif (in_array($type, [Distiller::TYPE_NODE, Distiller::TYPE_MARK])) {
+        } elseif (in_array($type, [Distill::TYPE_NODE, Distill::TYPE_MARK])) {
             $type .= ':'.$value['type'];
         }
 
@@ -74,10 +75,10 @@ class Collector
         }
 
         $indexed = in_array($type, [
-            Distiller::TYPE_SET,
-            Distiller::TYPE_ROW,
-            Distiller::TYPE_NODE,
-            Distiller::TYPE_MARK,
+            Distill::TYPE_SET,
+            Distill::TYPE_ROW,
+            Distill::TYPE_NODE,
+            Distill::TYPE_MARK,
         ]);
 
         $self = implode('.', $path);
@@ -86,59 +87,59 @@ class Collector
             'path' => $self,
             'name' => ! $indexed ? Arr::last($path) : null,
             'index' => $indexed ? Arr::last($path) : null,
-            'root' => $this->root,
+            'source' => $this->value,
             'parent' => null,
             'prev' => null,
             'next' => null,
         ]);
         $this->store[$self] = $item;
 
-        if ($this->distiller->shouldCollect($item, $depth)) {
+        if ($this->query->shouldCollect($item, $depth)) {
             $this->items[] = $item;
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
                 if (isset($this->store[$parent])) {
-                    $this->store[$self]->drop()->setParent($this->store[$parent]);
+                    $this->store[$self]->drop->setParent($this->store[$parent]);
                 }
             }
             if ($path && $indexed) {
                 $prev = implode('.', array_merge(array_slice($path, 0, -1), [Arr::last($path) - 1]));
                 if (isset($this->store[$prev])) {
-                    $this->store[$self]->drop()->setPrev($this->store[$prev]);
-                    $this->store[$prev]->drop()->setNext($this->store[$self]);
+                    $this->store[$self]->drop->setPrev($this->store[$prev]);
+                    $this->store[$prev]->drop->setNext($this->store[$self]);
                 }
             }
         }
 
-        $continue = $this->distiller->shouldContinue(count($this->items));
+        $continue = $this->query->shouldContinue(count($this->items));
         if (! $continue) {
             return false;
         }
 
-        if ($depth === 0 || $this->distiller->shouldExpand($item, $depth)) {
+        if ($depth === 0 || $this->query->shouldExpand($item, $depth)) {
             if (in_array($primary, [
-                Distiller::TYPE_ENTRY,
-                Distiller::TYPE_TERM,
-                Distiller::TYPE_ASSET,
-                Distiller::TYPE_USER,
+                Distill::TYPE_ENTRY,
+                Distill::TYPE_TERM,
+                Distill::TYPE_ASSET,
+                Distill::TYPE_USER,
             ]) && $depth === 0) {
                 $continue = $this->collectObject($value, $path);
             } elseif (in_array($type, [
-                Distiller::TYPE_VALUE_ENTRIES,
-                Distiller::TYPE_VALUE_TERMS,
-                Distiller::TYPE_VALUE_ASSETS,
-                Distiller::TYPE_VALUE_USERS,
+                Distill::TYPE_VALUE_ENTRIES,
+                Distill::TYPE_VALUE_TERMS,
+                Distill::TYPE_VALUE_ASSETS,
+                Distill::TYPE_VALUE_USERS,
             ])) {
                 $continue = $this->collectObjects($value, $path);
-            } elseif ($type === Distiller::TYPE_VALUE_REPLICATOR) {
+            } elseif ($type === Distill::TYPE_VALUE_REPLICATOR) {
                 $continue = $this->collectReplicator($value, $path);
-            } elseif ($type === Distiller::TYPE_VALUE_BARD) {
+            } elseif ($type === Distill::TYPE_VALUE_BARD) {
                 $continue = $this->collectBard($value, $path);
-            } elseif ($type === Distiller::TYPE_VALUE_GRID) {
+            } elseif ($type === Distill::TYPE_VALUE_GRID) {
                 $continue = $this->collectGrid($value, $path);
-            } elseif ($primary === Distiller::TYPE_SET) {
+            } elseif ($primary === Distill::TYPE_SET) {
                 $continue = $this->collectSet($value, $path);
-            } elseif ($primary === Distiller::TYPE_ROW) {
+            } elseif ($primary === Distill::TYPE_ROW) {
                 $continue = $this->collectRow($value, $path);
             }
         }
@@ -169,7 +170,7 @@ class Collector
         while ($continue && count($stack)) {
             $name = array_shift($stack);
             $current = array_merge($path, [$name]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $value = $object->augmentedValue($name);
@@ -188,7 +189,7 @@ class Collector
         while ($continue && count($stack)) {
             $index = array_shift($stack);
             $current = array_merge($path, [$index]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $item = $data[$index];
@@ -211,12 +212,12 @@ class Collector
         while ($continue && count($stack)) {
             $index = array_shift($stack);
             $current = array_merge($path, [$index]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $item = $data[$index];
             $set = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
-            $continue = $this->collectValue($set, $current, Distiller::TYPE_SET);
+            $continue = $this->collectValue($set, $current, Distill::TYPE_SET);
         }
 
         return $continue;
@@ -235,7 +236,7 @@ class Collector
         while ($continue && count($stack)) {
             $index = array_shift($stack);
             $current = array_merge($path, [$index]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $node = $nodes[$index];
@@ -251,12 +252,12 @@ class Collector
     {
         $set = $fieldtype->augment([$set])[0]->getProxiedInstance()->all();
 
-        return $this->collectValue($set, $path, Distiller::TYPE_SET);
+        return $this->collectValue($set, $path, Distill::TYPE_SET);
     }
 
     protected function collectBardNode($item, $path, Bard $fieldtype)
     {
-        $continue = $this->collectValue($item, $path, Distiller::TYPE_NODE);
+        $continue = $this->collectValue($item, $path, Distill::TYPE_NODE);
 
         if ($continue) {
             $continue = $this->collectBardMarks($item['marks'] ?? [], $path, $fieldtype);
@@ -276,11 +277,11 @@ class Collector
         while ($continue && count($stack)) {
             $index = array_shift($stack);
             $current = array_merge($path, [$index]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $mark = $marks[$index];
-            $continue = $this->collectValue($mark, $current, Distiller::TYPE_MARK);
+            $continue = $this->collectValue($mark, $current, Distill::TYPE_MARK);
         }
 
         return $continue;
@@ -295,12 +296,12 @@ class Collector
         while ($continue && count($stack)) {
             $index = array_shift($stack);
             $current = array_merge($path, [$index]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $item = $data[$index];
             $row = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
-            $continue = $this->collectValue($row, $current, Distiller::TYPE_ROW);
+            $continue = $this->collectValue($row, $current, Distill::TYPE_ROW);
         }
 
         return $continue;
@@ -314,7 +315,7 @@ class Collector
         while ($continue && count($stack)) {
             $name = array_shift($stack);
             $current = array_merge($path, [$name]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $value = $set[$name];
@@ -332,7 +333,7 @@ class Collector
         while ($continue && count($stack)) {
             $name = array_shift($stack);
             $current = array_merge($path, [$name]);
-            if (! $this->distiller->shouldTraverse($current)) {
+            if (! $this->query->shouldTraverse($current)) {
                 continue;
             }
             $value = $row[$name];

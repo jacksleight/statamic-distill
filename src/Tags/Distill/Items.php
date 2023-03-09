@@ -40,29 +40,30 @@ class Items
 
     public function get()
     {
-        return $this->results($this->distiller());
+        return $this->results($this->query());
     }
 
     public function count()
     {
-        return $this->distiller()->count();
+        return $this->query()->count();
     }
 
-    protected function distiller()
+    protected function query()
     {
-        $distiller = Distill::from($this->from);
+        $query = Distill::from($this->from);
 
-        $this->queryType($distiller);
-        $this->queryPath($distiller);
-        $this->queryExpand($distiller);
-        $this->queryDepth($distiller);
-        $this->queryConditions($distiller);
-        $this->queryOrderBys($distiller);
+        $this->queryType($query);
+        $this->queryPath($query);
+        $this->queryExpand($query);
+        $this->queryDepth($query);
+        $this->queryConditions($query);
+        $this->queryStills($query);
+        $this->queryOrderBys($query);
 
-        return $distiller;
+        return $query;
     }
 
-    protected function queryType($distiller)
+    protected function queryType($query)
     {
         if (! isset($this->type)) {
             return;
@@ -73,10 +74,10 @@ class Items
             $type = explode('|', $this->type);
         }
 
-        $distiller->type($type);
+        $query->type($type);
     }
 
-    protected function queryPath($distiller)
+    protected function queryPath($query)
     {
         if (! isset($this->path)) {
             return;
@@ -87,10 +88,10 @@ class Items
             $path = explode('|', $this->path);
         }
 
-        $distiller->path($path);
+        $query->path($path);
     }
 
-    protected function queryExpand($distiller)
+    protected function queryExpand($query)
     {
         if (! isset($this->expand)) {
             return;
@@ -101,23 +102,43 @@ class Items
             $expand = explode('|', $this->expand);
         }
 
-        $distiller->expand($expand);
+        $query->expand($expand);
     }
 
-    protected function queryDepth($distiller)
+    protected function queryDepth($query)
     {
         if (isset($this->includeRoot)) {
-            $distiller->includeRoot($this->includeRoot);
+            $query->includeRoot($this->includeRoot);
         }
         if (isset($this->depth)) {
-            $distiller->depth($this->depth);
+            $query->depth($this->depth);
         }
         if (isset($this->minDepth)) {
-            $distiller->minDepth($this->minDepth);
+            $query->minDepth($this->minDepth);
         }
         if (isset($this->maxDepth)) {
-            $distiller->maxDepth($this->maxDepth);
+            $query->maxDepth($this->maxDepth);
         }
+    }
+
+    public function queryStills($query)
+    {
+        $this->parseQueryStills()
+            ->map(function ($handle) {
+                return app('statamic.distill_stills')->get($handle);
+            })
+            ->filter()
+            ->each(function ($class) use ($query) {
+                $still = app($class);
+                $still->apply($query, $this->params);
+            });
+    }
+
+    protected function parseQueryStills()
+    {
+        $stills = $this->params->get('still');
+
+        return collect(explode('|', $stills ?? ''));
     }
 
     protected function parseParameters($params)

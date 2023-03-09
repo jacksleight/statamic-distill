@@ -12,7 +12,8 @@
         },
         "laravel": {
             "providers": [
-                "JackSleight\\StatamicDistill\\ServiceProvider"
+                "JackSleight\\StatamicDistill\\ServiceProvider",
+                "JackSleight\\StatamicDistill\\StillServiceProvider"
             ]
         }
     },
