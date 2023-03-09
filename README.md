@@ -8,14 +8,13 @@
 
 <!-- /statamic:hide -->
 
-> **⚠️ Experimental:** This addon is experimental and could change. [Have and idea or suggestion?](https://github.com/jacksleight/statamic-distill/issues).
-
 This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting all the text from multiple nested Bard fields
-* Adding individual sections of a page to your search index
 * Finding every asset referenced in a Replicator, or just the first image
 * Filtering, sorting and paginating a Grid field just like a collection
+* Adding individual sections of a page to your search index
+* Loads more!
 
 ## Installation
 
@@ -93,9 +92,9 @@ class Sections extends Still
 
 ## Usage
 
-Distill works by walking through the value you specify looking for items that match your criteria. It can find many types of item, from individual paragraphs field values, to entire sets and references to other content.
+Distill works by walking through the value you provide looking for items that match your criteria. It can find individual paragraphs and field values through to entire sets and references to other content.
 
-To ensure optimal performance you should use the `from`, `path`, `expand`, `limit` and `max_depth` parameters to restrict how far it goes based on what you're looking for. These options don't just filter the final result, they tell Distill when to stop looking.
+To ensure optimal performance you should use the `from`, `path`, `expand`, `limit` and `max_depth` parameters to restrict where it goes based on what you're looking for. These options don't just filter the final result, they tell Distill where to look and when to stop.
 
 Distill can find references to other entries, terms, assets and users, but it will not recursively walk into those objects.
 
@@ -112,10 +111,10 @@ The `{{ distill:* }}` tag accepts the following parameters:
   * `row` A Grid row
   * `node:[type]` A Bard node
   * `mark:[type]` A Bard mark
-  * `entry` An entry object
-  * `term` A term object
-  * `asset` An asset object
-  * `user` A user object
+  * `entry` An entry
+  * `term` A term
+  * `asset` An asset
+  * `user` A user
 * **path (string, array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
@@ -150,17 +149,17 @@ The `{{ distill:* }}` tag accepts the following parameters:
 * **[conditions] (mixed)**  
   Any [where conditions](https://statamic.dev/conditions).
 
-The `from` parameter _must_ be the name of the source variable passed as a string, this wont work: `:from="builder"`.
+The `from` parameter must be the name of the source variable passed as a string, this wont work: `:from="builder"`.
 
-The query builder class has matching camel cased method names.
-
-### Distill Count Tag
-
-The `distill:count` tag returns the number of results from a query.
+The query builder class has camel cased method names that match the parameters above.
 
 ### Distill Bard Tag
 
 The `distill:bard` tag returns Bard data only and in a format that is compatible with the `bard_*` modifiers.
+
+### Distill Count Tag
+
+The `distill:count` tag returns the number of results from a query.
 
 ### Stills
 
