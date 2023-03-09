@@ -14,7 +14,7 @@ This Statamic addon allows you to query or index the individual values, sets and
 * Finding every asset referenced in a Replicator, or just the first image
 * Filtering, sorting and paginating a Grid field just like a collection
 * Adding individual sections of a page to your search index
-* Loads more!
+* Plenty more!
 
 ## Installation
 
@@ -151,7 +151,16 @@ The `{{ distill:* }}` tag accepts the following parameters:
 
 The `from` parameter must be the name of the source variable passed as a string, this wont work: `:from="builder"`.
 
-The query builder class has camel cased method names that match the parameters above.
+Each item returned includes an `info` variable thay contains the following data:
+
+* type
+* path
+* name
+* index
+* source
+* parent
+* prev
+* next
 
 ### Distill Bard Tag
 
@@ -163,7 +172,7 @@ The `distill:count` tag returns the number of results from a query.
 
 ### Stills
 
-Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters.
+Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters. The query builder class has camel cased method names that match the tag parameters above.
 
 ### Search
 
