@@ -103,8 +103,6 @@ Distill can find references to other entries, terms, assets and users, but it wi
 
 The `{{ distill:* }}` tag accepts the following parameters:
 
-* **[conditions] (mixed)**  
-  Any [where conditions](https://statamic.dev/conditions).
 * **from (mixed)**  
   The source value.
 * **type (string, array)**  
@@ -149,6 +147,10 @@ The `{{ distill:* }}` tag accepts the following parameters:
   Whether to include the source value, defaults to false.
 * **still (string)**  
   Which stills to apply, multiple stills can be pipe delimited.
+* **[conditions] (mixed)**  
+  Any [where conditions](https://statamic.dev/conditions).
+
+The `from` parameter _must_ be the name of the source variable passed as a string, this wont work: `:from="builder"`.
 
 The query builder class has matching camel cased method names.
 
@@ -162,7 +164,7 @@ The `distill:bard` tag returns Bard data only and in a format that is compatible
 
 ### Stills
 
-Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by creating a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters.
+Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters.
 
 ### Search
 
