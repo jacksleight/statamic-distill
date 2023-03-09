@@ -93,7 +93,9 @@ class Sections extends Still
 
 ## Usage
 
-Distill works by walking through the value you specify looking for items that match your criteria. It can find many types of item, from individual paragraphs field values, to entire sets and references to other content. To ensure optimal performance you should use the `from`, `path`, `expand`, `limit` and `max_depth` parameters to restrict how far it goes based on what you're looking for. These options don't just filter the final result, they tell Distill when to stop looking.
+Distill works by walking through the value you specify looking for items that match your criteria. It can find many types of item, from individual paragraphs field values, to entire sets and references to other content.
+
+To ensure optimal performance you should use the `from`, `path`, `expand`, `limit` and `max_depth` parameters to restrict how far it goes based on what you're looking for. These options don't just filter the final result, they tell Distill when to stop looking.
 
 Distill can find references to other entries, terms, assets and users, but it will not recursively walk into those objects.
 
