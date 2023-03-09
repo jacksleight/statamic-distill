@@ -11,7 +11,7 @@ class StillServiceProvider extends ExtensionServiceProvider implements Deferrabl
     public function register()
     {
         $types = [
-            'distill_stills' => [
+            'distill.stills' => [
                 'class' => Still::class,
                 'directory' => 'Stills',
             ],
@@ -25,6 +25,6 @@ class StillServiceProvider extends ExtensionServiceProvider implements Deferrabl
 
     public function provides(): array
     {
-        return ['statamic.distill_stills'];
+        return ['statamic.distill.stills'];
     }
 }

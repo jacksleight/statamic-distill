@@ -125,7 +125,7 @@ class Items
     {
         $this->parseQueryStills()
             ->map(function ($handle) {
-                return app('statamic.distill_stills')->get($handle);
+                return app('statamic.distill.stills')->get($handle);
             })
             ->filter()
             ->each(function ($class) use ($query) {

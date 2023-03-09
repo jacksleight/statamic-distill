@@ -35,7 +35,7 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
 
     public function getSearchValue(string $field)
     {
-        return $this->data[$field];
+        return $this->data[$field] ?? null;
     }
 
     public function toSearchResult(): ResultContract

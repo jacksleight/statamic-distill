@@ -6,8 +6,8 @@ use Illuminate\Support\Collection;
 use JackSleight\StatamicDistill\Facades\Distill;
 use JackSleight\StatamicDistill\Items\Item;
 use Statamic\Facades\Data;
-use Statamic\Facades\Entry;
 use Statamic\Search\Searchables\Provider;
+use Statamic\Search\Searchables\Providers;
 use Statamic\Support\Str;
 
 class ItemProvider extends Provider
@@ -18,6 +18,7 @@ class ItemProvider extends Provider
 
     public function find(array $keys): Collection
     {
+        // @todo optimise to fetch all of same type at once
         return collect($keys)
             ->map(function ($key) {
                 $ref = Str::beforeLast($key, '::');
@@ -34,11 +35,47 @@ class ItemProvider extends Provider
 
     public function provide(): Collection
     {
-        $test = Entry::find('7fe0eb7c-ca86-4c40-a1a3-774e7b18aaa3');
+        // @todo event listeners
+        $types = collect($this->keys)
+            ->map(fn ($key) => [
+                'prefix' => Str::before($key, ':'),
+                'key' => Str::after(Str::beforeLast($key, ':'), ':'),
+                'still' => Str::afterLast($key, ':'),
+            ])
+            ->groupBy('prefix')
+            ->map(fn ($group) => collect($group)
+                ->groupBy('key')
+                ->map(fn ($group) => collect($group)
+                    ->pluck('still')));
 
-        return Distill::from($test)
-            ->path('builder.*')
-            ->get();
+        $items = collect();
+        foreach ($types as $prefix => $keys) {
+            foreach ($keys as $key => $stills) {
+                $sources = app(Providers::class)
+                    ->make($prefix, $this->index, [$key])
+                    ->provide();
+                $items = $items->concat($this->distillSources($sources, $stills));
+            }
+        }
+
+        return $items;
+    }
+
+    protected function distillSources(Collection $sources, Collection $stills)
+    {
+        $items = collect();
+
+        foreach ($sources as $source) {
+            foreach ($stills as $handle) {
+                $class = app('statamic.distill.stills')->get($handle);
+                $still = app($class);
+                $query = Distill::from($source);
+                $still->apply($query, []);
+                $items = $items->concat($query->get());
+            }
+        }
+
+        return $items;
     }
 
     public function contains($searchable): bool

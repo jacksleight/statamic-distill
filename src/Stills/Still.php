@@ -9,7 +9,7 @@ abstract class Still
 {
     use RegistersItself, HasHandle;
 
-    protected static $binding = 'distill_stills';
+    protected static $binding = 'distill.stills';
 
     /**
      * Apply the still to a given query builder.
