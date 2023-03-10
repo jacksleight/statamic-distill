@@ -169,8 +169,21 @@ The `distill:count` tag returns the number of results from a query.
 
 ### Stills
 
-Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters. The query builder class has camel cased method names that match the tag parameters above usual `where` methods.
+Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters.
 
 ### Search
 
 Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
+
+### Queries
+
+You can query a value manually in PHP using the Distill facade. The query builder class has camel cased method names that match the tag parameters above, plus all the usual `where` methods:
+
+```php
+use JackSleight\StatamicDistill\Facades\Distill;
+
+$videos = Distill::from($value)
+  ->type('set:video')
+  ->where('url', 'like', '%youtube.com%')
+  ->get();
+```
