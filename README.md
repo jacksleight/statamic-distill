@@ -99,7 +99,7 @@ Distill can find references to other entries, terms, assets and users, but it wi
 
 ### Distill Tag
 
-The `{{ distill:* }}` tag accepts the following parameters:
+The `{{ distill:... }}` tag accepts the following parameters:
 
 * **from (string)**  
   The name of the source variable, _not the variable itself_.
@@ -161,11 +161,11 @@ Each item returned includes an `info` object that contains the following values:
 
 ### Distill Bard Tag
 
-The `distill:bard` tag returns Bard data only and in a format that is compatible with the `bard_*` modifiers.
+The `{{ distill:bard from="..." }}` tag returns Bard data only and in a format that is compatible with the `bard_*` modifiers.
 
 ### Distill Count Tag
 
-The `distill:count` tag returns the number of results from a query.
+The `{{ distill:count from="..." }}` tag returns the number of results from a query.
 
 ### Stills
 
