@@ -59,7 +59,7 @@ composer require jacksleight/statamic-distill
 ```php
 // config/statamic/search.php
 'searchables' => [
-    'distill:collection:page:sections',
+    'distill:collection:pages:sections',
 ],
 ```
 ```php
