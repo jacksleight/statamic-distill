@@ -43,7 +43,7 @@ composer require jacksleight/statamic-distill
 ### Filter, sort and paginate a Grid field
 
 ```antlers
-{{ distill:skus depth="1" paginate="10" :category:is="get:category" :sort="get:sort" }}
+{{ distill:parts_list depth="1" paginate="10" :category:is="get:category" :sort="get:sort" }}
     {{ items }}
         {{ name }} {{ price }}
     {{ /items }}
@@ -51,7 +51,7 @@ composer require jacksleight/statamic-distill
         <a href="{{ prev_page }}">⬅</a>
         <a href="{{ next_page }}">➡</a>
     {{ /paginate }}
-{{ /distill:skus }}
+{{ /distill:parts_list }}
 ```
 
 ### Add sections of a page to a search index
@@ -182,7 +182,7 @@ You can query a value manually in PHP using the Distill facade. The query builde
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
 
-$videos = Distill::from($value)
+$youTubeVideos = Distill::from($value)
   ->type('set:video')
   ->where('url', 'like', '%youtube.com%')
   ->get();
