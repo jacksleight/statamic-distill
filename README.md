@@ -48,8 +48,8 @@ composer require jacksleight/statamic-distill
         {{ name }} {{ price }}
     {{ /items }}
     {{ paginate }}
-        <a href="{{ prev_page }}">⬅</a>
-        <a href="{{ next_page }}">➡</a>
+        <a href="{{ prev_page }}">←</a>
+        <a href="{{ next_page }}">→</a>
     {{ /paginate }}
 {{ /distill:parts_list }}
 ```
