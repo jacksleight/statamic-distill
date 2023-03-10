@@ -25,7 +25,7 @@ class Items
 
     protected $expand;
 
-    protected $includeRoot;
+    protected $includeSource;
 
     protected $depth;
 
@@ -107,8 +107,8 @@ class Items
 
     protected function queryDepth($query)
     {
-        if (isset($this->includeRoot)) {
-            $query->includeRoot($this->includeRoot);
+        if (isset($this->includeSource)) {
+            $query->includeSource($this->includeSource);
         }
         if (isset($this->depth)) {
             $query->depth($this->depth);
@@ -149,7 +149,7 @@ class Items
         $this->type = $this->params->get('type');
         $this->path = $this->params->get('path');
         $this->expand = $this->params->get('expand');
-        $this->includeRoot = $this->params->get('includeRoot');
+        $this->includeSource = $this->params->get('include_source');
         $this->depth = $this->params->get('depth');
         $this->minDepth = $this->params->get('minDepth');
         $this->maxDepth = $this->params->get('maxDepth');

@@ -71,7 +71,7 @@ class Collector
         }
 
         if (! $type) {
-            throw new \Exception('Unknown type');
+            throw new \Exception('Provided value is an unknown type');
         }
 
         $indexed = in_array($type, [
@@ -99,14 +99,14 @@ class Collector
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
                 if (isset($this->store[$parent])) {
-                    $this->store[$self]->drop->setParent($this->store[$parent]);
+                    $this->store[$self]->info->setParent($this->store[$parent]);
                 }
             }
             if ($path && $indexed) {
                 $prev = implode('.', array_merge(array_slice($path, 0, -1), [Arr::last($path) - 1]));
                 if (isset($this->store[$prev])) {
-                    $this->store[$self]->drop->setPrev($this->store[$prev]);
-                    $this->store[$prev]->drop->setNext($this->store[$self]);
+                    $this->store[$self]->info->setPrev($this->store[$prev]);
+                    $this->store[$prev]->info->setNext($this->store[$self]);
                 }
             }
         }
@@ -147,7 +147,7 @@ class Collector
         return $continue;
     }
 
-    protected function createItem($value, $drop)
+    protected function createItem($value, $info)
     {
         if ($value instanceof Value) {
             $value = ['value' => $value];
@@ -157,7 +157,8 @@ class Collector
             $value = new Item($value);
         }
 
-        $value->setSupplement('drop', new Drop($drop));
+        $value->setSupplement('is_distilled', true);
+        $value->setSupplement('info', new Info($info));
 
         return $value;
     }

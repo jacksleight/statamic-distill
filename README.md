@@ -78,16 +78,15 @@ class Sections extends Still
 ```
 ```antlers
 {{# resources/views/search.antlers.html #}}
-<a href="{{ drop:source:url }}#{{ id }}">
-    {{ title }}
-</a>
-```
-```antlers
-{{# resources/views/pages/show.antlers.html #}}
-<div id="{{ id }}">
-    <h2>{{ title }}</h2>
-    {{ content }}
-</div>
+{{ search:results }}
+    {{ if is_distilled }}
+        <a href="{{ item:source:url }}#{{ id }}">
+            {{ title }}
+        </a>
+    {{ else }}
+        ...
+    {{ /if }}
+{{ /search:results }}
 ```
 
 ## Usage
@@ -102,9 +101,9 @@ Distill can find references to other entries, terms, assets and users, but it wi
 
 The `{{ distill:* }}` tag accepts the following parameters:
 
-* **from (mixed)**  
-  The source value.
-* **type (string, array)**  
+* **from (string)**  
+  The name of the source variable, not the variable itself.
+* **type (string|array)**  
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` A field value
   * `set:[handle]` A Replicator or Bard set
@@ -115,7 +114,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
   * `term` A term
   * `asset` An asset
   * `user` A user
-* **path (string, array)**  
+* **path (string|array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
   Sets both `max_depth` and `min_depth`.
@@ -123,7 +122,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The minimim depth to find items from.
 * **max_depth (integer)**  
   The maximum depth to find items from.
-* **expand (string, array)**  
+* **expand (string|array)**  
   Which types to expand and walk into, defaults to all, options are:
   * `set:*`
   * `row`
@@ -142,25 +141,23 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The number of items per page.
 * **sort (string)**  
   The sort order.
-* **include_root (string)**  
+* **include_source (boolean)**  
   Whether to include the source value, defaults to false.
 * **still (string)**  
   Which stills to apply, multiple stills can be pipe delimited.
 * **[conditions] (mixed)**  
   Any [where conditions](https://statamic.dev/conditions).
 
-The `from` parameter must be the name of the source variable passed as a string, this wont work: `:from="builder"`.
+Each item returned includes an `info` array that contains the following keys:
 
-Each item returned includes an `info` variable thay contains the following data:
-
-* type
-* path
-* name
-* index
-* source
-* parent
-* prev
-* next
+* *type* - Type of the item.
+* *path* - Path to the item from the source.
+* *name* - Field name/handle, applies to `value:*` types.
+* *index* - Index of the item, applies to non `value:*` types.
+* *source* - Original source value.
+* *parent* - Item's parent item.
+* *prev* - Item's previous sibling item.
+* *next* - Item's next sibling item.
 
 ### Distill Bard Tag
 
@@ -172,8 +169,8 @@ The `distill:count` tag returns the number of results from a query.
 
 ### Stills
 
-Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters. The query builder class has camel cased method names that match the tag parameters above.
+Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters. The query builder class has camel cased method names that match the tag parameters above usual `where` methods.
 
 ### Search
 
-Distill allows you to add any individual page items to a search index, so they appear as their own search results. You can then use hash/fragment URLs to link to those pages using set IDs, slugs generated from your content, or some other method. Check out the example above for further details.
+Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.

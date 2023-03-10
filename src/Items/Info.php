@@ -7,7 +7,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Statamic\Contracts\Data\Augmentable;
 use Statamic\Data\HasAugmentedData;
 
-class Drop implements Augmentable, ArrayAccess, Arrayable
+class Info implements Augmentable, ArrayAccess, Arrayable
 {
     use HasAugmentedData;
 

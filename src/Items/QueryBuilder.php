@@ -17,7 +17,7 @@ class QueryBuilder extends IteratorBuilder
 
     protected $expand;
 
-    protected $includeRoot = false;
+    protected $includeSource = false;
 
     protected $minDepth;
 
@@ -45,9 +45,9 @@ class QueryBuilder extends IteratorBuilder
         return $this;
     }
 
-    public function includeRoot($value)
+    public function includeSource($value)
     {
-        $this->includeRoot = $value;
+        $this->includeSource = $value;
 
         return $this;
     }
@@ -97,7 +97,7 @@ class QueryBuilder extends IteratorBuilder
 
     public function shouldCollect($item, $depth)
     {
-        if (! $this->includeRoot && $depth === 0) {
+        if (! $this->includeSource && $depth === 0) {
             return false;
         }
 
@@ -109,11 +109,11 @@ class QueryBuilder extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->type) && ! preg_match($this->type, $item->drop->type)) {
+        if (isset($this->type) && ! preg_match($this->type, $item->info->type)) {
             return false;
         }
 
-        if (isset($this->path) && ! preg_match($this->path, $item->drop->path)) {
+        if (isset($this->path) && ! preg_match($this->path, $item->info->path)) {
             return false;
         }
 
@@ -130,11 +130,11 @@ class QueryBuilder extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->expand) && ! preg_match($this->expand, $item->drop->type)) {
+        if (isset($this->expand) && ! preg_match($this->expand, $item->info->type)) {
             return false;
         }
 
-        if (isset($this->chunks) && ! preg_match($this->chunks, $item->drop->path)) {
+        if (isset($this->chunks) && ! preg_match($this->chunks, $item->info->path)) {
             return false;
         }
 
