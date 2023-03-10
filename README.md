@@ -102,7 +102,7 @@ Distill can find references to other entries, terms, assets and users, but it wi
 The `{{ distill:* }}` tag accepts the following parameters:
 
 * **from (string)**  
-  The name of the source variable, _not the variable itself_.
+  The name of the source variable (_not the variable itself_), can be a single field value or an entry, term, asset or user.
 * **type (string|array)**  
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
