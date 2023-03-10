@@ -91,18 +91,18 @@ class Sections extends Still
 
 ## Usage
 
-Distill works by walking through the value you provide looking for items that match your criteria. It can find individual paragraphs and field values through to entire sets and references to other content.
+Distill recursively walks through the value you provide looking for items that match your criteria. It can find individual paragraphs and field values through to entire sets and references to other content.
 
 For optimal performance you should use the `from`, `path`, `expand`, `limit` and `max_depth` parameters to restrict where it goes based on what you're looking for. These options don't just filter the final result, they tell Distill where to look and when to stop.
 
-Distill can find references to other entries, terms, assets and users, but it will not recursively walk into those objects.
+Distill can find references to other entries, terms, assets and users, but it will not walk into those objects.
 
 ### Distill Tag
 
 The `{{ distill:* }}` tag accepts the following parameters:
 
 * **from (string)**  
-  The name of the source variable, not the variable itself.
+  The name of the source variable, _not the variable itself_.
 * **type (string|array)**  
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` A field value
@@ -122,9 +122,9 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The minimim depth to find items from.
 * **max_depth (integer)**  
   The maximum depth to find items from.
-* **expand (string|array)**  
-  Which types to expand and walk into, defaults to all, options are:
-  * `set:*`
+* **expand (string|array, all)**  
+  Which types to expand and walk into, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
+  * `set:[handle]`
   * `row`
   * `value:replicator`
   * `value:bard`
@@ -138,26 +138,26 @@ The `{{ distill:* }}` tag accepts the following parameters:
 * **offset (integer)**  
   The starting item offset.
 * **paginate (integer)**  
-  The number of items per page.
+  Enables pagination and sets the number of items per page.
 * **sort (string)**  
   The sort order.
-* **include_source (boolean)**  
-  Whether to include the source value, defaults to false.
+* **include_source (boolean, false)**  
+  Whether to include the source value.
 * **still (string)**  
   Which stills to apply, multiple stills can be pipe delimited.
 * **[conditions] (mixed)**  
   Any [where conditions](https://statamic.dev/conditions).
 
-Each item returned includes an `info` array that contains the following keys:
+Each item returned includes an `info` object that contains the following values:
 
 * *type* - Type of the item.
 * *path* - Path to the item from the source.
 * *name* - Field name/handle, applies to `value:*` types.
 * *index* - Index of the item, applies to non `value:*` types.
 * *source* - Original source value.
-* *parent* - Item's parent item.
-* *prev* - Item's previous sibling item.
-* *next* - Item's next sibling item.
+* *parent* - Parent item in the hierachy.
+* *prev* - Previous sibling item in the hierachy.
+* *next* - Next sibling item in the hierachy.
 
 ### Distill Bard Tag
 
