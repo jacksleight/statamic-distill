@@ -169,7 +169,7 @@ The `distill:count` tag returns the number of results from a query.
 
 ### Stills
 
-Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and an array of additional tag parameters.
+Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and array of tag parameters.
 
 ### Search
 
