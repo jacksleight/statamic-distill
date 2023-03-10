@@ -140,7 +140,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
 * **include_source (boolean, false)**  
   Whether to include the source value.
 * **still (string)**  
-  Which stills to apply, multiple stills can be pipe delimited.
+  Which still to apply, multiple stills can be pipe delimited.
 * **[conditions] (mixed)**  
   Any [where conditions](https://statamic.dev/conditions).
 
