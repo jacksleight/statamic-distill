@@ -244,12 +244,14 @@ class Collector
                 continue;
             }
             $node = $nodes[$index];
-            if ($node['type'] === 'set' && ! $node['enabled']) {
-                continue;
+            if ($node['type'] === 'set') {
+                if (! ($node['enabled'] ?? true)) {
+                    continue;
+                }
+                $continue = $this->collectBardSet($node, $current, $fieldtype);
+            } else {
+                $continue = $this->collectBardNode($node, $current, $fieldtype);
             }
-            $continue = $node['type'] === 'set'
-                ? $this->collectBardSet($node, $current, $fieldtype)
-                : $this->collectBardNode($node, $current, $fieldtype);
         }
 
         return $continue;
