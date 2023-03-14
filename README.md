@@ -1,9 +1,5 @@
 <!-- statamic:hide -->
 
-![Statamic](https://flat.badgen.net/badge/Statamic/3.4+/FF269E)
-![Packagist version](https://flat.badgen.net/packagist/v/jacksleight/statamic-distill)
-![License](https://flat.badgen.net/github/license/jacksleight/statamic-distill)
-
 # Distill 
 
 <!-- /statamic:hide -->
@@ -13,7 +9,7 @@ This Statamic addon allows you to query or index the individual values, sets and
 * Extracting all the text from multiple nested Bard fields
 * Finding every asset referenced in a Replicator, or just the first image
 * Filtering, sorting and paginating a Grid field just like a collection
-* Adding individual sections of a page to your search index
+* Adding individual sections of a page to a search index
 * Plenty more!
 
 ## Installation
@@ -48,8 +44,8 @@ composer require jacksleight/statamic-distill
         {{ name }} {{ price }}
     {{ /items }}
     {{ paginate }}
-        <a href="{{ prev_page }}">⬅</a>
-        <a href="{{ next_page }}">➡</a>
+        <a href="{{ prev_page }}">←</a>
+        <a href="{{ next_page }}">→</a>
     {{ /paginate }}
 {{ /distill:parts_list }}
 ```
@@ -59,7 +55,7 @@ composer require jacksleight/statamic-distill
 ```php
 // config/statamic/search.php
 'searchables' => [
-    'distill:collection:page:sections',
+    'distill:collection:pages:sections',
 ],
 ```
 ```php
@@ -102,7 +98,7 @@ Distill can find references to other entries, terms, assets and users, but it wi
 The `{{ distill:* }}` tag accepts the following parameters:
 
 * **from (string)**  
-  The name of the source variable, _not the variable itself_.
+  The name of the source variable (_not the variable itself_), can be a single field value or an entry, term, asset or user.
 * **type (string|array)**  
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
@@ -144,7 +140,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
 * **include_source (boolean, false)**  
   Whether to include the source value.
 * **still (string)**  
-  Which stills to apply, multiple stills can be pipe delimited.
+  Which still to apply, multiple stills can be pipe delimited.
 * **[conditions] (mixed)**  
   Any [where conditions](https://statamic.dev/conditions).
 
@@ -182,7 +178,7 @@ You can query a value manually in PHP using the Distill facade. The query builde
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
 
-$youTubeVideos = Distill::from($value)
+$youtubeVideos = Distill::from($value)
     ->type('set:video')
     ->where('url', 'like', '%youtube.com%')
     ->get();
