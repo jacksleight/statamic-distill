@@ -18,6 +18,19 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
 
     protected $data;
 
+    public static function placeholder($source, $path)
+    {
+        $item = new static([]);
+
+        $item->setSupplement('is_distilled', true);
+        $item->setSupplement('info', new Info([
+            'source' => $source,
+            'path' => $path,
+        ]));
+
+        return $item;
+    }
+
     public function __construct(array $data)
     {
         $this->data = $data;

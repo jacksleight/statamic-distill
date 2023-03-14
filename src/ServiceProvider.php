@@ -11,6 +11,10 @@ class ServiceProvider extends AddonServiceProvider
         Tags\Distill::class,
     ];
 
+    protected $subscribe = [
+        Listeners\IndexUpdater::class,
+    ];
+
     public function bootAddon()
     {
         ItemProvider::register();

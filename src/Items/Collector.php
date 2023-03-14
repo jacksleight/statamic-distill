@@ -217,6 +217,9 @@ class Collector
                 continue;
             }
             $item = $data[$index];
+            if (! $item['enabled']) {
+                continue;
+            }
             $set = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
             $continue = $this->collectValue($set, $current, Distill::TYPE_SET);
         }
@@ -241,6 +244,9 @@ class Collector
                 continue;
             }
             $node = $nodes[$index];
+            if ($node['type'] === 'set' && ! $node['enabled']) {
+                continue;
+            }
             $continue = $node['type'] === 'set'
                 ? $this->collectBardSet($node, $current, $fieldtype)
                 : $this->collectBardNode($node, $current, $fieldtype);

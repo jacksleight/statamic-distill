@@ -35,18 +35,7 @@ class ItemProvider extends Provider
 
     public function provide(): Collection
     {
-        // @todo event listeners
-        $types = collect($this->keys)
-            ->map(fn ($key) => [
-                'prefix' => Str::before($key, ':'),
-                'key' => Str::after(Str::beforeLast($key, ':'), ':'),
-                'still' => Str::afterLast($key, ':'),
-            ])
-            ->groupBy('prefix')
-            ->map(fn ($group) => collect($group)
-                ->groupBy('key')
-                ->map(fn ($group) => collect($group)
-                    ->pluck('still')));
+        $types = Distill::parseKeys($this->keys);
 
         $items = collect();
         foreach ($types as $prefix => $keys) {
@@ -54,24 +43,8 @@ class ItemProvider extends Provider
                 $sources = app(Providers::class)
                     ->make($prefix, $this->index, [$key])
                     ->provide();
-                $items = $items->concat($this->distillSources($sources, $stills));
-            }
-        }
-
-        return $items;
-    }
-
-    protected function distillSources(Collection $sources, Collection $stills)
-    {
-        $items = collect();
-
-        foreach ($sources as $source) {
-            foreach ($stills as $handle) {
-                $class = app('statamic.distill.stills')->get($handle);
-                $still = app($class);
-                $query = Distill::from($source);
-                $still->apply($query, []);
-                $items = $items->concat($query->get());
+                $results = Distill::processSources($sources, $stills);
+                $items = $items->concat($results);
             }
         }
 
