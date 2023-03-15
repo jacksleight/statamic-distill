@@ -18,7 +18,6 @@ class ItemProvider extends Provider
 
     public function find(array $keys): Collection
     {
-        // @todo optimise to fetch all of same type at once
         return collect($keys)
             ->map(function ($key) {
                 $ref = Str::beforeLast($key, '::');
@@ -35,20 +34,22 @@ class ItemProvider extends Provider
 
     public function provide(): Collection
     {
-        $types = Distill::parseKeys($this->keys);
+        $manager = app(Manager::class);
 
-        $items = collect();
+        $types = $manager->restructureKeys($this->keys);
+
+        $stack = collect();
         foreach ($types as $prefix => $keys) {
             foreach ($keys as $key => $stills) {
                 $sources = app(Providers::class)
                     ->make($prefix, $this->index, [$key])
                     ->provide();
-                $results = Distill::processSources($sources, $stills);
-                $items = $items->concat($results);
+                $items = $manager->processSources($sources, $stills);
+                $stack = $stack->concat($items);
             }
         }
 
-        return $items;
+        return $stack;
     }
 
     public function contains($searchable): bool

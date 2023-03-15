@@ -4,6 +4,8 @@
 
 <!-- /statamic:hide -->
 
+> ⚠️ *Experimental:* This addon is a work in progress and may change.
+
 This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting all the text from multiple nested Bard fields
@@ -103,7 +105,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
   * `set:[handle]` - A Replicator or Bard set
-  * `row` - A Grid row
+  * `row:unknown` - A Grid row (subtype support is planned)
   * `node:[type]` - A Bard node
   * `mark:[type]` - A Bard mark
   * `entry` - An entry
@@ -169,7 +171,7 @@ Stills are exactly the same as [query scopes](https://statamic.dev/extending/que
 
 ### Search
 
-Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
+Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. You can index items from `collection` and `taxonomy` searchables, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
 
 ### Queries
 
@@ -178,7 +180,7 @@ You can query a value manually in PHP using the Distill facade. The query builde
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
 
-$youtubeVideos = Distill::from($value)
+$youtubeVideoSets = Distill::from($value)
     ->type('set:video')
     ->where('url', 'like', '%youtube.com%')
     ->get();

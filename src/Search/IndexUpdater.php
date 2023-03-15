@@ -1,43 +1,50 @@
 <?php
 
-namespace JackSleight\StatamicDistill\Listeners;
+namespace JackSleight\StatamicDistill\Search;
 
-use JackSleight\StatamicDistill\Facades\Distill;
 use Statamic\Contracts\Taxonomies\Term;
-use Statamic\Events\AssetDeleted;
-use Statamic\Events\AssetSaved;
 use Statamic\Events\EntryDeleted;
 use Statamic\Events\EntrySaved;
+use Statamic\Events\EntrySaving;
 use Statamic\Events\TermDeleted;
 use Statamic\Events\TermSaved;
-use Statamic\Events\UserDeleted;
-use Statamic\Events\UserSaved;
+use Statamic\Events\TermSaving;
 use Statamic\Facades\Search;
 
 class IndexUpdater
 {
     public function subscribe($event)
     {
+        $event->listen(EntrySaving::class, self::class.'@prepare');
         $event->listen(EntrySaved::class, self::class.'@update');
         $event->listen(EntryDeleted::class, self::class.'@delete');
-        $event->listen(AssetSaved::class, self::class.'@update');
-        $event->listen(AssetDeleted::class, self::class.'@delete');
-        $event->listen(UserSaved::class, self::class.'@update');
-        $event->listen(UserDeleted::class, self::class.'@delete');
+        $event->listen(TermSaving::class, self::class.'@prepare');
         $event->listen(TermSaved::class, self::class.'@update');
         $event->listen(TermDeleted::class, self::class.'@delete');
     }
 
+    public function prepare($event)
+    {
+        $manager = app(Manager::class);
+
+        $this->sources($event)->each(function ($source) use ($manager) {
+            $manager->storeCurrentSource($source);
+        });
+    }
+
     public function update($event)
     {
-        $this->sources($event)->each(function ($source) {
-            $current = Distill::inspectSource($source);
-            $updated = Distill::processSource($source);
+        $manager = app(Manager::class);
+
+        $this->sources($event)->each(function ($source) use ($manager) {
+            $current = $manager->fetchCurrentSource($source);
+            $updated = $manager->processSource($source);
             $updated
                 ->each(function ($item) {
                     Search::updateWithinIndexes($item);
                 });
             $current
+                ->keyBy('info.path')
                 ->except($updated->pluck('info.path')->all())
                 ->each(function ($item) {
                     Search::deleteFromIndexes($item);
@@ -47,8 +54,10 @@ class IndexUpdater
 
     public function delete($event)
     {
-        $this->sources($event)->each(function ($source) {
-            Distill::getPlaceholderItems($source)
+        $manager = app(Manager::class);
+
+        $this->sources($event)->each(function ($source) use ($manager) {
+            $manager->processSource($source)
                 ->each(function ($item) {
                     Search::deleteFromIndexes($item);
                 });

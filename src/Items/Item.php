@@ -51,6 +51,21 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
         return $this->data[$field] ?? null;
     }
 
+    public function getCpSearchResultTitle()
+    {
+        return '';
+    }
+
+    public function getCpSearchResultBadge()
+    {
+        return '';
+    }
+
+    public function getCpSearchResultUrl()
+    {
+        return '';
+    }
+
     public function toSearchResult(): ResultContract
     {
         return new Result($this, 'distill:'.$this->info->type);

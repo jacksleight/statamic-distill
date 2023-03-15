@@ -66,6 +66,8 @@ class Collector
 
         if (in_array($type, [Distill::TYPE_SET])) {
             $type .= ':'.$value['type'];
+        } elseif (in_array($type, [Distill::TYPE_ROW])) {
+            $type .= ':unknown';
         } elseif (in_array($type, [Distill::TYPE_NODE, Distill::TYPE_MARK])) {
             $type .= ':'.$value['type'];
         }
@@ -87,7 +89,7 @@ class Collector
             'path' => $self,
             'name' => ! $indexed ? Arr::last($path) : null,
             'index' => $indexed ? Arr::last($path) : null,
-            'source' => $this->value,
+            'source' => &$this->value,
             'parent' => null,
             'prev' => null,
             'next' => null,
