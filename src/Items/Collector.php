@@ -28,7 +28,7 @@ class Collector
         $this->query = $query;
     }
 
-    public function collect(Entry|Term|Asset|User|Value $value)
+    public function collect(Page|Entry|Term|Asset|User|Value $value)
     {
         if ($value instanceof Page) {
             $value = $value->entry();
