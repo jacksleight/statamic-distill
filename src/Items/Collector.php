@@ -28,7 +28,7 @@ class Collector
         $this->query = $query;
     }
 
-    public function collect($value)
+    public function collect(Entry|Term|Asset|User|Value $value)
     {
         if ($value instanceof Page) {
             $value = $value->entry();
@@ -73,7 +73,7 @@ class Collector
         }
 
         if (! $type) {
-            throw new \Exception('Provided value is an unknown type');
+            throw new \Exception('Value is an unknown type');
         }
 
         $indexed = in_array($type, [
