@@ -8,7 +8,7 @@
     "extra": {
         "statamic": {
             "name": "Distill",
-            "description": ""
+            "description": "This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields."
         },
         "laravel": {
             "providers": [
