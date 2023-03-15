@@ -4,8 +4,6 @@
 
 <!-- /statamic:hide -->
 
-> ⚠️ *Experimental:* This addon is a work in progress and may change.
-
 This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting all the text from multiple nested Bard fields
@@ -78,7 +76,7 @@ class Sections extends Still
 {{# resources/views/search.antlers.html #}}
 {{ search:results }}
     {{ if is_distilled }}
-        <a href="{{ item:source:url }}#{{ id }}">
+        <a href="{{ info:source:url }}#{{ id }}">
             {{ title }}
         </a>
     {{ else }}
@@ -171,7 +169,7 @@ Stills are exactly the same as [query scopes](https://statamic.dev/extending/que
 
 ### Search
 
-Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. You can index items from `collection` and `taxonomy` searchables, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
+Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Items from entries and terms are supported, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
 
 ### Queries
 
