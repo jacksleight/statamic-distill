@@ -171,7 +171,7 @@ Stills are exactly the same as [query scopes](https://statamic.dev/extending/que
 
 ### Search
 
-Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. You can index items from `collection` and `taxonomy` searchables, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
+Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Items from entries and terms are currently supported, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
 
 ### Queries
 
