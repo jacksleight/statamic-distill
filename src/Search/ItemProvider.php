@@ -57,7 +57,6 @@ class ItemProvider extends Provider
         }
 
         $source = $searchable->info->source;
-
         if (! $this->getSourceProvider($source)->contains($source)) {
             return false;
         }
