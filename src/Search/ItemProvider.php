@@ -39,11 +39,9 @@ class ItemProvider extends Provider
         $types = $manager->restructureKeys($this->keys);
 
         $stack = collect();
-        foreach ($types as $prefix => $keys) {
+        foreach ($types as $type => $keys) {
             foreach ($keys as $key => $stills) {
-                $sources = app(Providers::class)
-                    ->make($prefix, $this->index, [$key])
-                    ->provide();
+                $sources = $this->getSourceProvider($type, [$key])->provide();
                 $items = $manager->processSources($sources, $stills);
                 $stack = $stack->concat($items);
             }
@@ -54,6 +52,27 @@ class ItemProvider extends Provider
 
     public function contains($searchable): bool
     {
-        return $searchable instanceof Item;
+        if (! $searchable instanceof Item) {
+            return false;
+        }
+
+        $source = $searchable->info->source;
+
+        if (! $this->getSourceProvider($source)->contains($source)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function getSourceProvider($source, $keys = null)
+    {
+        if (is_string($source)) {
+            return app(Providers::class)
+                ->make($source, $this->index, $keys);
+        }
+
+        return app(Providers::class)
+            ->make(app(Manager::class)->getSourceType($source), $this->index, $keys);
     }
 }

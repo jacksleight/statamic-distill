@@ -10,6 +10,11 @@ use Statamic\Support\Str;
 
 class Manager
 {
+    protected $mapping = [
+        'collection' => Entry::class,
+        'taxonomy' => Term::class,
+    ];
+
     protected $current = [];
 
     public function processSource($source, $stills = null)
@@ -61,13 +66,7 @@ class Manager
 
     public function getSourceStills($source = null)
     {
-        $type = collect([
-            'collection' => Entry::class,
-            'taxonomy' => Term::class,
-        ])
-            ->filter(fn ($class) => $source instanceof $class)
-            ->keys()
-            ->first();
+        $type = $this->getSourceType($source);
 
         $keys = collect(config('statamic.search.indexes'))
             ->pluck('searchables')
@@ -91,11 +90,11 @@ class Manager
     {
         return collect($keys)
             ->map(fn ($key) => [
-                'prefix' => Str::before($key, ':'),
+                'type' => Str::before($key, ':'),
                 'key' => Str::after(Str::beforeLast($key, ':'), ':'),
                 'still' => Str::afterLast($key, ':'),
             ])
-            ->groupBy('prefix')
+            ->groupBy('type')
             ->only([
                 'collection',
                 'taxonomy',
@@ -106,5 +105,13 @@ class Manager
                 ->groupBy('key')
                 ->map(fn ($group) => collect($group)
                     ->pluck('still')));
+    }
+
+    public function getSourceType($source)
+    {
+        return collect($this->mapping)
+            ->filter(fn ($class) => $source instanceof $class)
+            ->keys()
+            ->first();
     }
 }
