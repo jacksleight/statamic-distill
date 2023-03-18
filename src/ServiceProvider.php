@@ -2,7 +2,7 @@
 
 namespace JackSleight\StatamicDistill;
 
-use JackSleight\StatamicDistill\Search\ItemProvider;
+use Illuminate\Support\Facades\Event;
 use JackSleight\StatamicDistill\Search\Manager;
 use Statamic\Providers\AddonServiceProvider;
 
@@ -10,10 +10,6 @@ class ServiceProvider extends AddonServiceProvider
 {
     protected $tags = [
         Tags\Distill::class,
-    ];
-
-    protected $subscribe = [
-        Search\IndexUpdater::class,
     ];
 
     public function register()
@@ -25,6 +21,9 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        ItemProvider::register();
+        if (false) {
+            Search\ItemProvider::register();
+            Event::subscribe(Search\IndexUpdater::class);
+        }
     }
 }
