@@ -10,7 +10,7 @@ This Statamic addon allows you to query or index the individual values, sets and
 
 * Extracting all the text from multiple nested Bard fields
 * Finding every asset referenced in a Replicator, or just the first image
-* Filtering, sorting and paginating a Grid field just like a collection
+* Filtering, sorting and paginating a Grid field or raw array just like a collection
 * Adding individual sections of a page to a search index (Pro)
 * Plenty more!
 
