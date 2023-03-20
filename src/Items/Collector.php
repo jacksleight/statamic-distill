@@ -12,6 +12,7 @@ use Statamic\Fieldtypes\Bard;
 use Statamic\Query\OrderedQueryBuilder;
 use Statamic\Structures\Page;
 use Statamic\Support\Arr;
+use Statamic\Support\Str;
 
 class Collector
 {
@@ -62,16 +63,6 @@ class Collector
             }
         }
 
-        $primary = $type;
-
-        if (in_array($type, [Distill::TYPE_SET])) {
-            $type .= ':'.$value['type'];
-        } elseif (in_array($type, [Distill::TYPE_ROW])) {
-            $type .= ':unknown';
-        } elseif (in_array($type, [Distill::TYPE_NODE, Distill::TYPE_MARK])) {
-            $type .= ':'.$value['type'];
-        }
-
         if (! $type) {
             throw new \Exception('Value is an unknown type');
         }
@@ -119,6 +110,7 @@ class Collector
         }
 
         if ($depth === 0 || $this->query->shouldExpand($item, $depth)) {
+            $primary = Str::before($type, ':');
             if (in_array($primary, [
                 Distill::TYPE_ENTRY,
                 Distill::TYPE_TERM,
@@ -223,7 +215,7 @@ class Collector
                 continue;
             }
             $set = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
-            $continue = $this->collectValue($set, $current, Distill::TYPE_SET);
+            $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type']);
         }
 
         return $continue;
@@ -263,12 +255,12 @@ class Collector
     {
         $set = $fieldtype->augment([$set])[0]->getProxiedInstance()->all();
 
-        return $this->collectValue($set, $path, Distill::TYPE_SET);
+        return $this->collectValue($set, $path, Distill::TYPE_SET.':'.$set['type']);
     }
 
     protected function collectBardNode($item, $path, Bard $fieldtype)
     {
-        $continue = $this->collectValue($item, $path, Distill::TYPE_NODE);
+        $continue = $this->collectValue($item, $path, Distill::TYPE_NODE.':'.$item['type']);
 
         if ($continue) {
             $continue = $this->collectBardMarks($item['marks'] ?? [], $path, $fieldtype);
@@ -292,7 +284,7 @@ class Collector
                 continue;
             }
             $mark = $marks[$index];
-            $continue = $this->collectValue($mark, $current, Distill::TYPE_MARK);
+            $continue = $this->collectValue($mark, $current, Distill::TYPE_MARK).':'.$mark['type'];
         }
 
         return $continue;
@@ -300,6 +292,8 @@ class Collector
 
     protected function collectGrid(Value $value, $path)
     {
+        $type = $value->field()->get('dtl_type', 'unknown');
+
         $data = $value->raw() ?? [];
         $stack = array_keys($data);
 
@@ -312,7 +306,7 @@ class Collector
             }
             $item = $data[$index];
             $row = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
-            $continue = $this->collectValue($row, $current, Distill::TYPE_ROW);
+            $continue = $this->collectValue($row, $current, Distill::TYPE_ROW.':'.$type);
         }
 
         return $continue;
