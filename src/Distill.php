@@ -38,6 +38,12 @@ class Distill
 
     const TYPE_MARK = 'mark';
 
+    const TYPE_RAW = 'raw';
+
+    const TYPE_RAW_ARRAY = 'raw:array';
+
+    const TYPE_RAW_OBJECT = 'raw:object';
+
     public function from($value)
     {
         return new QueryBuilder($value);

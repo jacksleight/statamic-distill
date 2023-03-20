@@ -112,14 +112,14 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
   * `set:[handle]` - A Replicator or Bard set
-  * `row:[distill-type]` - A Grid row 🚧
+  * `row:[distill-type]` - A Grid row
   * `node:[type]` - A Bard node
   * `mark:[type]` - A Bard mark
   * `entry` - An entry
   * `term` - A term
   * `asset` - An asset
   * `user` - A user
-  * `raw:[type]` - A raw value 🚧
+  * `raw:[php-type]` - A raw value 🚧
 * **path (string|array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
@@ -139,6 +139,8 @@ The `{{ distill:* }}` tag accepts the following parameters:
   * `value:terms`
   * `value:assets`
   * `value:users`
+  * `raw:array`
+  * `raw:object`
 * **limit (integer)**  
   The maximum number of items.
 * **offset (integer)**  

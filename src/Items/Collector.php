@@ -29,7 +29,7 @@ class Collector
         $this->query = $query;
     }
 
-    public function collect(Page|Entry|Term|Asset|User|Value $value)
+    public function collect($value)
     {
         if ($value instanceof Page) {
             $value = $value->entry();
@@ -60,11 +60,9 @@ class Collector
                 $type = Distill::TYPE_USER;
             } elseif ($value instanceof Value) {
                 $type = Distill::TYPE_VALUE.':'.optional($value->fieldtype())->handle() ?? 'unknown';
+            } else {
+                $type = Distill::TYPE_RAW.':'.Str::slug(gettype($value));
             }
-        }
-
-        if (! $type) {
-            throw new \Exception('Value is an unknown type');
         }
 
         $indexed = in_array($type, [
@@ -72,6 +70,7 @@ class Collector
             Distill::TYPE_ROW,
             Distill::TYPE_NODE,
             Distill::TYPE_MARK,
+            Distill::TYPE_RAW_ARRAY,
         ]);
 
         $self = implode('.', $path);
@@ -117,14 +116,14 @@ class Collector
                 Distill::TYPE_ASSET,
                 Distill::TYPE_USER,
             ]) && $depth === 0) {
-                $continue = $this->collectObject($value, $path);
+                $continue = $this->collectData($value, $path);
             } elseif (in_array($type, [
                 Distill::TYPE_VALUE_ENTRIES,
                 Distill::TYPE_VALUE_TERMS,
                 Distill::TYPE_VALUE_ASSETS,
                 Distill::TYPE_VALUE_USERS,
             ])) {
-                $continue = $this->collectObjects($value, $path);
+                $continue = $this->collectDatas($value, $path);
             } elseif ($type === Distill::TYPE_VALUE_REPLICATOR) {
                 $continue = $this->collectReplicator($value, $path);
             } elseif ($type === Distill::TYPE_VALUE_BARD) {
@@ -135,6 +134,8 @@ class Collector
                 $continue = $this->collectSet($value, $path);
             } elseif ($primary === Distill::TYPE_ROW) {
                 $continue = $this->collectRow($value, $path);
+            } elseif ($type === Distill::TYPE_RAW_ARRAY) {
+                $continue = $this->collectArray($value, $path);
             }
         }
 
@@ -143,7 +144,7 @@ class Collector
 
     protected function createItem($value, $info)
     {
-        if ($value instanceof Value) {
+        if ($value instanceof Value || is_scalar($value) || is_null($value)) {
             $value = ['value' => $value];
         }
 
@@ -157,7 +158,7 @@ class Collector
         return $value;
     }
 
-    protected function collectObject(Entry|Term|Asset|User $object, $path)
+    protected function collectData(Entry|Term|Asset|User $object, $path)
     {
         $stack = $object->blueprint()->fields()->all()->keys()->all();
 
@@ -175,7 +176,7 @@ class Collector
         return $continue;
     }
 
-    protected function collectObjects(Value $value, $path)
+    protected function collectDatas(Value $value, $path)
     {
         $data = Arr::wrap($value->raw()) ?? [];
         $stack = array_keys($data);
@@ -343,6 +344,25 @@ class Collector
             }
             $value = $row[$name];
             $continue = $this->collectValue($value, $current);
+        }
+
+        return $continue;
+    }
+
+    protected function collectArray(array $value, $path)
+    {
+        $data = $value;
+        $stack = array_keys($data);
+
+        $continue = true;
+        while ($continue && count($stack)) {
+            $index = array_shift($stack);
+            $current = array_merge($path, [$index]);
+            if (! $this->query->shouldTraverse($current)) {
+                continue;
+            }
+            $item = $data[$index];
+            $continue = $this->collectValue($item, $current);
         }
 
         return $continue;
