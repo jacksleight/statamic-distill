@@ -191,3 +191,15 @@ $youtubeVideoSets = Distill::from($value)
 ### Search Integration (Pro)
 
 Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Items from entries and terms are supported, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
+
+<!-- statamic:hide -->
+
+## Licencing
+
+Distill Pro is not free software. You will need to purchase a license via the [Statamic Marketplace](https://statamic.com/addons/jacksleight/distill) to use it in production.
+
+## Contributing
+
+Contributions are very welcome, however please bear in mind that while Distill's source code is open source and publicly available, it is proprietary. Everything in this repo, including any community-contributed code, is the property of Jack Sleight.
+
+<!-- /statamic:hide -->
