@@ -100,7 +100,7 @@ Distill recursively walks through the value you provide looking for items that m
 
 For optimal performance you should use the `from`, `path`, `expand`, `limit` and `max_depth` parameters to restrict where it goes based on what you're looking for. These options don't just filter the final result, they tell Distill where to look and when to stop.
 
-Distill can find references to other entries, terms, assets and users, but it will not walk into those objects.
+Distill can find references to other entries, terms, assets and users, but it will not walk into those objects. Additionally Distill will only walk raw values if you provide one, it will not walk into a field value's raw value.
 
 ### Distill Tag
 
@@ -112,7 +112,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
   * `set:[handle]` - A Replicator or Bard set
-  * `row:[distill-type]` - A Grid row
+  * `row:[distill-type]` - A Grid row (type can be defined in the field config)
   * `node:[type]` - A Bard node
   * `mark:[type]` - A Bard mark
   * `entry` - An entry
