@@ -13,7 +13,9 @@ class ServiceProvider extends AddonServiceProvider
 
     public function register()
     {
-        if (false) {
+        $pro = Addon::get('jacksleight/statamic-distill')->edition() === 'pro';
+
+        if ($pro) {
             $this->app->singleton(Search\Manager::class, function () {
                 return new Search\Manager;
             });
@@ -22,7 +24,9 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        if (false) {
+        $pro = Addon::get('jacksleight/statamic-distill')->edition() === 'pro';
+
+        if ($pro) {
             Search\ItemProvider::register();
             Event::subscribe(Search\IndexUpdater::class);
         }
