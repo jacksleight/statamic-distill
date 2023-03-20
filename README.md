@@ -112,7 +112,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
   * `set:[handle]` - A Replicator or Bard set
-  * `row:[distill-type]` - A Grid row
+  * `row:[distill-type]` - A Grid row (type can be defined in the field config)
   * `node:[type]` - A Bard node
   * `mark:[type]` - A Bard mark
   * `entry` - An entry
