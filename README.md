@@ -9,7 +9,7 @@ This Statamic addon allows you to query or index the individual values, sets and
 * Extracting all the text from multiple nested Bard fields
 * Finding every asset referenced in a Replicator, or just the first image
 * Filtering, sorting and paginating a Grid field just like a collection
-* Adding individual sections of a page to a search index
+* Adding individual sections of a page to a search index (Pro)
 * Plenty more!
 
 ## Installation
@@ -50,7 +50,7 @@ composer require jacksleight/statamic-distill
 {{ /distill:parts_list }}
 ```
 
-### Add sections of a page to a search index
+### Add sections of a page to a search index (Pro)
 
 ```php
 // config/statamic/search.php
@@ -167,7 +167,7 @@ The `{{ distill:count }}` tag returns the number of results from a query.
 
 Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and array of tag parameters.
 
-### Search
+### Search (Pro)
 
 Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Items from entries and terms are supported, check out the example above. Search indexing queries use the whole entry as their source value, you can use the path parameter to target specific fields within the entry.
 
