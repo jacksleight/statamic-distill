@@ -16,8 +16,8 @@ This Statamic addon allows you to query or index the individual values, sets and
 
 | Feature                      | Free | Pro   |
 | ---------------------------- | :--: | :---: |
-| Distill Tags & Query Builder | ●    | ●     |
-| Search Integration           |      | ●     |
+| Tags & Query Builder         | ●    | ●     |
+| Search                       |      | ●     |
 
 
 ## Installation
