@@ -4,6 +4,8 @@
 
 <!-- /statamic:hide -->
 
+> **🚧 Work In Progress:** Some things are unfinished and may change.
+
 This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting all the text from multiple nested Bard fields
@@ -18,7 +20,6 @@ This Statamic addon allows you to query or index the individual values, sets and
 | ---------------------------- | :--: | :---: |
 | Tags & Query Builder         | ●    | ●     |
 | Search                       |      | ●     |
-
 
 ## Installation
 
@@ -111,13 +112,14 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The type to match, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `value:[fieldtype]` - A field value
   * `set:[handle]` - A Replicator or Bard set
-  * `row:unknown` - A Grid row (subtype support is planned)
+  * `row:[distill-type]` - A Grid row 🚧
   * `node:[type]` - A Bard node
   * `mark:[type]` - A Bard mark
   * `entry` - An entry
   * `term` - A term
   * `asset` - An asset
   * `user` - A user
+  * `raw:[type]` - A raw value 🚧
 * **path (string|array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
