@@ -95,12 +95,7 @@ class Manager
                 'still' => Str::afterLast($key, ':'),
             ])
             ->groupBy('type')
-            ->only([
-                'collection',
-                'taxonomy',
-                'assets',
-                'users',
-            ])
+            ->only(array_keys($this->mapping))
             ->map(fn ($group) => collect($group)
                 ->groupBy('key')
                 ->map(fn ($group) => collect($group)

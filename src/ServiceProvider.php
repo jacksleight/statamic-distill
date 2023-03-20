@@ -3,7 +3,6 @@
 namespace JackSleight\StatamicDistill;
 
 use Illuminate\Support\Facades\Event;
-use JackSleight\StatamicDistill\Search\Manager;
 use Statamic\Providers\AddonServiceProvider;
 
 class ServiceProvider extends AddonServiceProvider
@@ -14,9 +13,11 @@ class ServiceProvider extends AddonServiceProvider
 
     public function register()
     {
-        $this->app->singleton(Manager::class, function () {
-            return new Manager;
-        });
+        if (false) {
+            $this->app->singleton(Search\Manager::class, function () {
+                return new Search\Manager;
+            });
+        }
     }
 
     public function bootAddon()
