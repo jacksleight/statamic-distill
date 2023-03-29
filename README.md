@@ -118,7 +118,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
   * `term` - A term
   * `asset` - An asset
   * `user` - A user
-  * `raw:[php-type]` - A raw value 🚧
+  * `raw:[php-type]` - A raw value
 * **path (string|array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
