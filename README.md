@@ -4,7 +4,7 @@
 
 <!-- /statamic:hide -->
 
-> 🚧 **Work In Progress:** Some things are unfinished, other things may change.
+> 🚧 **Work In Progress:** Some things may change/break.
 
 This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
