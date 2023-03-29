@@ -130,7 +130,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
 * **expand (string|array, all)**  
   Which types to expand and walk into, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `set:[handle]`
-  * `row:unknown`
+  * `row:[distill-type]`
   * `value:replicator`
   * `value:bard`
   * `value:grid`
