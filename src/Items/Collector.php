@@ -2,6 +2,8 @@
 
 namespace JackSleight\StatamicDistill\Items;
 
+use Exception;
+use Illuminate\Support\Collection;
 use JackSleight\StatamicDistill\Distill;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Contracts\Auth\User;
@@ -13,6 +15,7 @@ use Statamic\Query\OrderedQueryBuilder;
 use Statamic\Structures\Page;
 use Statamic\Support\Arr;
 use Statamic\Support\Str;
+use stdClass;
 
 class Collector
 {
@@ -34,6 +37,9 @@ class Collector
         if ($value instanceof Page) {
             $value = $value->entry();
         }
+        if ($value instanceof Collection) {
+            $value = $value->all();
+        }
 
         $this->value = $value;
 
@@ -47,6 +53,10 @@ class Collector
 
     protected function collectValue($value, $path = [], $type = null)
     {
+        if ($value instanceof Collection) {
+            $value = $value->all();
+        }
+
         $depth = count($path);
 
         if (! $type) {
@@ -61,29 +71,58 @@ class Collector
             } elseif ($value instanceof Value) {
                 $type = Distill::TYPE_VALUE.':'.optional($value->fieldtype())->handle() ?? 'unknown';
             } else {
-                $type = Distill::TYPE_RAW.':'.Str::slug(gettype($value));
+                $raw = Str::slug(gettype($value));
+                $type = Distill::TYPE_RAW.':'.$raw;
+                if (! in_array($type, [
+                    Distill::TYPE_RAW_ARRAY,
+                    Distill::TYPE_RAW_BOOLEAN,
+                    Distill::TYPE_RAW_FLOAT,
+                    Distill::TYPE_RAW_INTEGER,
+                    Distill::TYPE_RAW_NULL,
+                    Distill::TYPE_RAW_OBJECT,
+                    Distill::TYPE_RAW_STRING,
+                ])) {
+                    throw new Exception('Unsupported raw type: '.$raw);
+                } elseif ($type === Distill::TYPE_RAW_OBJECT && ! $value instanceof stdClass) {
+                    throw new Exception('Unsupported object type: '.get_class($value));
+                }
             }
         }
 
-        $indexed = in_array($type, [
-            Distill::TYPE_SET,
-            Distill::TYPE_ROW,
-            Distill::TYPE_NODE,
-            Distill::TYPE_MARK,
-            Distill::TYPE_RAW_ARRAY,
-        ]);
-
+        $primary = Str::before($type, ':');
         $self = implode('.', $path);
-        $item = $this->createItem($value, [
+        $info = [
             'type' => $type,
             'path' => $self,
-            'name' => ! $indexed ? Arr::last($path) : null,
-            'index' => $indexed ? Arr::last($path) : null,
+            // 'name' => ! $indexed ? Arr::last($path) : null,
+            // 'index' => $indexed ? Arr::last($path) : null,
             'source' => &$this->value,
             'parent' => null,
-            'prev' => null,
-            'next' => null,
-        ]);
+            // 'prev' => null,
+            // 'next' => null,
+        ];
+
+        $item = $value;
+
+        if ($primary === Distill::TYPE_VALUE || in_array($type, [
+            Distill::TYPE_RAW_BOOLEAN,
+            Distill::TYPE_RAW_INTEGER,
+            Distill::TYPE_RAW_FLOAT,
+            Distill::TYPE_RAW_STRING,
+            Distill::TYPE_RAW_NULL,
+        ])) {
+            $item = ['value' => $item];
+        }
+        if ($type === Distill::TYPE_RAW_OBJECT) {
+            $item = get_object_vars($item);
+        }
+        if (is_array($item)) {
+            $item = new Item($item);
+        }
+
+        $item->setSupplement('is_distilled', true);
+        $item->setSupplement('info', new Info($info));
+
         $this->store[$self] = $item;
 
         if ($this->query->shouldCollect($item, $depth)) {
@@ -94,13 +133,13 @@ class Collector
                     $this->store[$self]->info->setParent($this->store[$parent]);
                 }
             }
-            if ($path && $indexed) {
-                $prev = implode('.', array_merge(array_slice($path, 0, -1), [Arr::last($path) - 1]));
-                if (isset($this->store[$prev])) {
-                    $this->store[$self]->info->setPrev($this->store[$prev]);
-                    $this->store[$prev]->info->setNext($this->store[$self]);
-                }
-            }
+            // if ($path && $indexed) {
+            //     $prev = implode('.', array_merge(array_slice($path, 0, -1), [Arr::last($path) - 1]));
+            //     if (isset($this->store[$prev])) {
+            //         $this->store[$self]->info->setPrev($this->store[$prev]);
+            //         $this->store[$prev]->info->setNext($this->store[$self]);
+            //     }
+            // }
         }
 
         $continue = $this->query->shouldContinue(count($this->items));
@@ -109,21 +148,20 @@ class Collector
         }
 
         if ($depth === 0 || $this->query->shouldExpand($item, $depth)) {
-            $primary = Str::before($type, ':');
             if (in_array($primary, [
                 Distill::TYPE_ENTRY,
                 Distill::TYPE_TERM,
                 Distill::TYPE_ASSET,
                 Distill::TYPE_USER,
             ]) && $depth === 0) {
-                $continue = $this->collectData($value, $path);
+                $continue = $this->collectRelationship($value, $path);
             } elseif (in_array($type, [
                 Distill::TYPE_VALUE_ENTRIES,
                 Distill::TYPE_VALUE_TERMS,
                 Distill::TYPE_VALUE_ASSETS,
                 Distill::TYPE_VALUE_USERS,
             ])) {
-                $continue = $this->collectDatas($value, $path);
+                $continue = $this->collectRelationships($value, $path);
             } elseif ($type === Distill::TYPE_VALUE_REPLICATOR) {
                 $continue = $this->collectReplicator($value, $path);
             } elseif ($type === Distill::TYPE_VALUE_BARD) {
@@ -135,30 +173,16 @@ class Collector
             } elseif ($primary === Distill::TYPE_ROW) {
                 $continue = $this->collectRow($value, $path);
             } elseif ($type === Distill::TYPE_RAW_ARRAY) {
-                $continue = $this->collectArray($value, $path);
+                $continue = $this->collectRawArray($value, $path);
+            } elseif ($type === Distill::TYPE_RAW_OBJECT) {
+                $continue = $this->collectRawObject($value, $path);
             }
         }
 
         return $continue;
     }
 
-    protected function createItem($value, $info)
-    {
-        if ($value instanceof Value || is_scalar($value) || is_null($value)) {
-            $value = ['value' => $value];
-        }
-
-        if (is_array($value)) {
-            $value = new Item($value);
-        }
-
-        $value->setSupplement('is_distilled', true);
-        $value->setSupplement('info', new Info($info));
-
-        return $value;
-    }
-
-    protected function collectData(Entry|Term|Asset|User $object, $path)
+    protected function collectRelationship(Entry|Term|Asset|User $object, $path)
     {
         $stack = $object->blueprint()->fields()->all()->keys()->all();
 
@@ -176,7 +200,7 @@ class Collector
         return $continue;
     }
 
-    protected function collectDatas(Value $value, $path)
+    protected function collectRelationships(Value $value, $path)
     {
         $data = Arr::wrap($value->raw()) ?? [];
         $stack = array_keys($data);
@@ -349,9 +373,28 @@ class Collector
         return $continue;
     }
 
-    protected function collectArray(array $value, $path)
+    protected function collectRawArray(array $value, $path)
     {
         $data = $value;
+        $stack = array_keys($data);
+
+        $continue = true;
+        while ($continue && count($stack)) {
+            $index = array_shift($stack);
+            $current = array_merge($path, [$index]);
+            if (! $this->query->shouldTraverse($current)) {
+                continue;
+            }
+            $item = $data[$index];
+            $continue = $this->collectValue($item, $current);
+        }
+
+        return $continue;
+    }
+
+    protected function collectRawObject(stdClass $value, $path)
+    {
+        $data = get_object_vars($value);
         $stack = array_keys($data);
 
         $continue = true;

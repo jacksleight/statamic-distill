@@ -95,6 +95,11 @@ class QueryBuilder extends IteratorBuilder
         return $items;
     }
 
+    protected function collect($items = [])
+    {
+        return ItemCollection::make($items);
+    }
+
     public function shouldCollect($item, $depth)
     {
         if (! $this->includeSource && $depth === 0) {

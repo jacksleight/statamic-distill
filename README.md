@@ -12,7 +12,6 @@ This Statamic addon allows you to query or index the individual values, sets and
 * Finding every asset referenced in a Replicator, or just the first image
 * Filtering, sorting and paginating a Grid field or raw array just like a collection
 * Adding individual sections of a page to a search index (Pro)
-* Plenty more!
 
 ## Editions
 
@@ -160,12 +159,12 @@ Each item returned includes an `info` object that contains the following values:
 
 * **type** - Type of the item.
 * **path** - Path to the item from the source.
-* **name** - Field name/handle, applies to `value:*` types.
-* **index** - Index of the item, applies to non `value:*` types.
+<!-- * **name** - Field name/handle, applies to `value:*` types.
+* **index** - Index of the item, applies to non `value:*` types. -->
 * **source** - Original source value.
 * **parent** - Parent item in the hierachy.
-* **prev** - Previous sibling item in the hierachy.
-* **next** - Next sibling item in the hierachy.
+<!-- * **prev** - Previous sibling item in the hierachy.
+* **next** - Next sibling item in the hierachy. -->
 
 ### Distill Bard Tag
 
