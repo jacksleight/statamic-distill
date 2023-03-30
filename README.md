@@ -8,8 +8,8 @@
 
 This Statamic addon allows you to query or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
-* Extracting all the text from multiple nested Bard fields
-* Finding every asset referenced in a Replicator, or just the first image
+* Extracting the text from every Bard field within a replicator
+* Finding every asset in the page, or just the first image
 * Filtering, sorting and paginating a Grid field or raw array just like a collection
 * Adding individual sections of a page to a search index (Pro)
 
