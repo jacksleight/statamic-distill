@@ -6,7 +6,7 @@
 
 > 🚧 **Work In Progress:** Some things may change/break. [Feedback welcome](https://github.com/jacksleight/statamic-distill/issues).
 
-This Statamic addon allows you to fetch or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
+This Statamic addon allows you to filter, fetch or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting the text from every Bard field within a replicator
 * Finding every asset in the page, or just the first image
