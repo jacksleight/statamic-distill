@@ -8,10 +8,10 @@ use JackSleight\StatamicDistill\Distill;
 use Statamic\Contracts\Assets\Asset;
 use Statamic\Contracts\Auth\User;
 use Statamic\Contracts\Entries\Entry;
+use Statamic\Contracts\Query\Builder;
 use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Fields\Value;
 use Statamic\Fieldtypes\Bard;
-use Statamic\Query\OrderedQueryBuilder;
 use Statamic\Structures\Page;
 use Statamic\Support\Arr;
 use Statamic\Support\Str;
@@ -214,7 +214,7 @@ class Collector
             }
             $item = $data[$index];
             $object = $value->fieldtype()->augment($item);
-            if ($object instanceof OrderedQueryBuilder) {
+            if ($object instanceof Builder) {
                 $object = $object->first();
             }
             $continue = $this->collectValue($object, $current);
