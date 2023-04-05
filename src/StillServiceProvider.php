@@ -18,6 +18,7 @@ class StillServiceProvider extends ExtensionServiceProvider implements Deferrabl
         ];
 
         foreach ($types as $key => $type) {
+            $this->app['statamic.extensions'][$type['class']] = collect();
             $this->registerBindingAlias($key, $type['class']);
             $this->registerAppExtensions($type['directory'], $type['class']);
         }
