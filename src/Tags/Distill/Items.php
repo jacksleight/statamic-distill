@@ -50,7 +50,7 @@ class Items
 
     protected function query()
     {
-        $query = Distill::from($this->from);
+        $query = Distill::query($this->from);
 
         $this->queryType($query);
         $this->queryPath($query);

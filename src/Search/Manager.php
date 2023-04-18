@@ -26,7 +26,7 @@ class Manager
         foreach ($stills as $handle) {
             $class = app('statamic.distill.stills')->get($handle);
             $still = app($class);
-            $query = Distill::from($source);
+            $query = Distill::query($source);
             $still->apply($query, []);
             $items = $query->get();
             $stack = $stack->concat($items);

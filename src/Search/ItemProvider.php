@@ -23,7 +23,7 @@ class ItemProvider extends Provider
                 $ref = Str::beforeLast($key, '::');
                 $path = Str::afterLast($key, '::');
                 $object = Data::find($ref);
-                $item = Distill::from($object)
+                $item = Distill::query($object)
                     ->path($path)
                     ->get()
                     ->first();

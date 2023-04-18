@@ -54,7 +54,7 @@ class Distill
 
     const TYPE_VALUE_USERS = 'value:users';
 
-    public function from($value)
+    public function query($value)
     {
         return new QueryBuilder($value);
     }
