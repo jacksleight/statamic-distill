@@ -58,4 +58,15 @@ class Distill
     {
         return new QueryBuilder($value);
     }
+
+    public function bard($value)
+    {
+        return (new QueryBuilder($value))
+            ->type('value:bard')
+            ->get()
+            ->map->value
+            ->map->raw()
+            ->flatten(1)
+            ->all();
+    }
 }
