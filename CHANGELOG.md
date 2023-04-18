@@ -1,9 +1,9 @@
 # Changelog
 
-## 0.1.2 (2023-04-18)
+## 0.2.0 (2023-04-18)
 
 - [new] Add `Distill:bard()` method
-- Renamed `Distill:from()` method to `Distill:query()`
+- [break] Renamed `Distill:from()` method to `Distill:query()`
 
 ## 0.1.1 (2023-04-05)
 
