@@ -202,7 +202,7 @@ use JackSleight\StatamicDistill\Facades\Distill;
 use Statamic\Facades\Collection;
 use Statamic\Statamic;
 
-Collection::computed('pages', 'plain_text', function ($entry) {
+Collection::computed('pages', 'builder_text', function ($entry) {
     $value = $entry->augmentedValue('builder');
     return Statamic::modify(Distill::bard($value))->bardText()->fetch();
 });
