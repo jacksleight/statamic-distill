@@ -187,7 +187,7 @@ You can query a value manually in PHP using the `Distill::query()` method. The q
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
 
-$youtubeVideoSets = Distill::from($value)
+$youtubeVideoSets = Distill::query($value)
     ->type('set:video')
     ->where('url', 'like', '%youtube.com%')
     ->get();
