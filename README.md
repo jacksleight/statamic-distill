@@ -178,9 +178,11 @@ The `{{ distill:count }}` tag returns the number of results from a query.
 
 Stills are exactly the same as [query scopes](https://statamic.dev/extending/query-scopes-and-filters), but for Distill queries. You can create them by adding a new class in `app/Stills/*.php`. They have an `apply` method that receives the query builder object and array of tag parameters.
 
-### Query Builder
+### Usage in PHP
 
-You can query a value manually in PHP using the Distill facade. The query builder class has camel cased method names that match the tag parameters above, plus all the usual `where` methods:
+#### Query Builder
+
+You can query a value manually in PHP using the `Distill::query()` method. The query builder class has camel cased method names that match the tag parameters above, plus all the usual `where` methods:
 
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
@@ -189,6 +191,21 @@ $youtubeVideoSets = Distill::from($value)
     ->type('set:video')
     ->where('url', 'like', '%youtube.com%')
     ->get();
+```
+
+#### Bard Values
+
+You can extract Bard data manually in PHP using the `Distill::bard()` method. For example to create a plain text computed value of a page builder you could do this: 
+
+```php
+use JackSleight\StatamicDistill\Facades\Distill;
+use Statamic\Facades\Collection;
+use Statamic\Statamic;
+
+Collection::computed('pages', 'plain_text', function ($entry) {
+    $value = $entry->augmentedValue('builder');
+    return Statamic::modify(Distill::bard($value))->bardText()->fetch();
+});
 ```
 
 ### Search Integration (Pro)
