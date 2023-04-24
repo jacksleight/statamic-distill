@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 (2023-04-24)
+
+- [break] Expanded `entry`, `term` and `asset` type values
+
 ## 0.2.0 (2023-04-18)
 
 - [new] Add `Distill:bard()` method
