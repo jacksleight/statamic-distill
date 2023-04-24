@@ -33,7 +33,7 @@ composer require jacksleight/statamic-distill
 ### Find every image in the page
 
 ```antlers
-{{ distill:page type="asset" is_image:is="true" }}
+{{ distill:page type="asset:*" is_image:is="true" }}
     {{ url }}
 {{ /distill:page }}
 ```
@@ -114,9 +114,9 @@ The `{{ distill:* }}` tag accepts the following parameters:
   * `row:[distill-type]` - A Grid row (type can be defined in the field config)
   * `node:[type]` - A Bard node
   * `mark:[type]` - A Bard mark
-  * `entry` - An entry
-  * `term` - A term
-  * `asset` - An asset
+  * `entry:[collection]` - An entry
+  * `term:[taxonomy]` - A term
+  * `asset:[container]` - An asset
   * `user` - A user
   * `raw:[php-type]` - A raw value
 * **path (string|array)**  

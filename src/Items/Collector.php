@@ -61,11 +61,11 @@ class Collector
 
         if (! $type) {
             if ($value instanceof Entry) {
-                $type = Distill::TYPE_ENTRY;
+                $type = Distill::TYPE_ENTRY.':'.$value->collection()->handle();
             } elseif ($value instanceof Term) {
-                $type = Distill::TYPE_TERM;
+                $type = Distill::TYPE_TERM.':'.$value->taxonomy()->handle();
             } elseif ($value instanceof Asset) {
-                $type = Distill::TYPE_ASSET;
+                $type = Distill::TYPE_ASSET.':'.$value->container()->handle();
             } elseif ($value instanceof User) {
                 $type = Distill::TYPE_USER;
             } elseif ($value instanceof Value) {
