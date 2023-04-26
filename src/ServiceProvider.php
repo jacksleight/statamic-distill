@@ -15,7 +15,7 @@ class ServiceProvider extends AddonServiceProvider
 
     public function bootAddon()
     {
-        $pro = Addon::get('jacksleight/statamic-distill')->edition() === 'pro';
+        // $pro = Addon::get('jacksleight/statamic-distill')->edition() === 'pro';
 
         Grid::appendConfigField('dtl_type', [
             'type' => 'slug',
@@ -26,12 +26,12 @@ class ServiceProvider extends AddonServiceProvider
             'width' => 50,
         ]);
 
-        if ($pro) {
+        // if ($pro) {
             $this->app->singleton(Search\Manager::class, function () {
                 return new Search\Manager;
             });
             Search\ItemProvider::register();
             Event::subscribe(Search\IndexUpdater::class);
-        }
+        // }
     }
 }
