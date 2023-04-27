@@ -220,6 +220,8 @@ Check out the example above, here's a brief explanation of what that example is 
 3. `->type('set:section')` - Only extract the sets of type "section"
 4. `'fields' => ['heading']` - Index the "heading" field from those sets
 
+When a search is run the section headings will be searched, and any matching sets will be returned as results.
+
 <!-- statamic:hide -->
 
 ## Licencing
