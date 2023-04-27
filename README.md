@@ -216,7 +216,7 @@ Distill can add the results of a query to a search index, so they appear as thei
 Check out the example above, here's a brief explanation of what that example is doing:
 
 1. `distill:collection:articles:sections` - Use the Sections still to extract items from entries within the articles collection
-2. `$query->path('builder.*')` - Extract all the items that are direct children of the "builder"  (the sets)
+2. `$query->path('builder.*')` - Extract all the items that are direct children of the "builder" field (the sets)
 3. `->type('set:section')` - Only extract the sets of type "section"
 4. `'fields' => ['heading']` - Index the "heading" field from those sets
 
