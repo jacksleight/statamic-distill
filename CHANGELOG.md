@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 (2023-05-29)
+
+- [fix] Missing edition data
+
 ## 0.3.0 (2023-04-24)
 
 - [break] Expanded `entry`, `term` and `asset` type values
