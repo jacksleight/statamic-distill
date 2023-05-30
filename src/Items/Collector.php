@@ -120,7 +120,6 @@ class Collector
             $item = new Item($item);
         }
 
-        $item->setSupplement('is_distilled', true);
         $item->setSupplement('info', new Info($info));
 
         $this->store[$self] = $item;

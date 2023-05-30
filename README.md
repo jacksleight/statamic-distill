@@ -84,7 +84,7 @@ class Sections extends Still
 ```antlers
 {{# resources/views/search.antlers.html #}}
 {{ search:results }}
-    {{ if is_distilled }}
+    {{ if result_type === 'distill:set:section' }}
         <a href="{{ info:source:url }}#{{ id }}">
             {{ title }}
         </a>

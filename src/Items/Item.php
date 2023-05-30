@@ -22,7 +22,6 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
     {
         $item = new static([]);
 
-        $item->setSupplement('is_distilled', true);
         $item->setSupplement('info', new Info([
             'source' => $source,
             'path' => $path,
