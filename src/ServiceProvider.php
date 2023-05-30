@@ -13,6 +13,10 @@ class ServiceProvider extends AddonServiceProvider
         Tags\Distill::class,
     ];
 
+    protected $modifiers = [
+        Modifiers\DistillBard::class,
+    ];
+
     public function bootAddon()
     {
         $pro = Addon::get('jacksleight/statamic-distill')->edition() === 'pro';

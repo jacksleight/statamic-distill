@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 (2023-05-30)
+
+- [new] Blade/PHP only distill_bard modifier
+
 ## 0.3.1 (2023-05-29)
 
 - [fix] Missing edition data
