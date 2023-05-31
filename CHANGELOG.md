@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 (2023-05-30)
+## 0.4.0 (2023-05-31)
 
 - [new] Blade/PHP only distill_bard modifier
 - [break] Removed `is_distilled` variable, use `result_type` instead
