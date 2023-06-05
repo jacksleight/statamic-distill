@@ -38,6 +38,7 @@ class Distill extends Tags
         $this->prepare();
 
         $this->params->put('type', 'value:bard');
+        $this->params->put('include_source', true);
 
         return $this->items()->get()
             ->map->value

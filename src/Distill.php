@@ -63,6 +63,7 @@ class Distill
     {
         return (new QueryBuilder($value))
             ->type('value:bard')
+            ->includeSource(true)
             ->get()
             ->map->value
             ->map->raw()
