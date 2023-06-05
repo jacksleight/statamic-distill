@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1 (2023-06-05)
+
+- [fix] Using `distill:bard` with a Bard field as the source
+
 ## 0.4.0 (2023-05-31)
 
 - [new] Blade/PHP only distill_bard modifier
