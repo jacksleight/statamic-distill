@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2 (2023-06-08)
+
+- [fix] Error using `distill:bard` with an empty Bard field
+
 ## 0.4.1 (2023-06-05)
 
 - [fix] Using `distill:bard` with a Bard field as the source

@@ -67,6 +67,7 @@ class Distill
             ->get()
             ->map->value
             ->map->raw()
+            ->filter()
             ->flatten(1)
             ->all();
     }

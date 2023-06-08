@@ -43,6 +43,7 @@ class Distill extends Tags
         return $this->items()->get()
             ->map->value
             ->map->raw()
+            ->filter()
             ->flatten(1)
             ->all();
     }
