@@ -238,7 +238,11 @@ class Collector
             if (! $item['enabled']) {
                 continue;
             }
-            $set = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
+            $set = $value->fieldtype()->augment([$item])[0];
+            if (is_array($set)) {
+                continue;
+            }
+            $set = $set->getProxiedInstance()->all();
             $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type']);
         }
 
@@ -266,20 +270,18 @@ class Collector
                 if (! ($node['enabled'] ?? true)) {
                     continue;
                 }
-                $continue = $this->collectBardSet($node, $current, $fieldtype);
+                $set = $fieldtype->augment([$node])[0];
+                if (is_array($set)) {
+                    continue;
+                }
+                $set = $set->getProxiedInstance()->all();
+                $continue = $this->collectValue($set, $path, Distill::TYPE_SET.':'.$set['type']);
             } else {
                 $continue = $this->collectBardNode($node, $current, $fieldtype);
             }
         }
 
         return $continue;
-    }
-
-    protected function collectBardSet($set, $path, Bard $fieldtype)
-    {
-        $set = $fieldtype->augment([$set])[0]->getProxiedInstance()->all();
-
-        return $this->collectValue($set, $path, Distill::TYPE_SET.':'.$set['type']);
     }
 
     protected function collectBardNode($item, $path, Bard $fieldtype)
@@ -329,7 +331,11 @@ class Collector
                 continue;
             }
             $item = $data[$index];
-            $row = $value->fieldtype()->augment([$item])[0]->getProxiedInstance()->all();
+            $row = $value->fieldtype()->augment([$item])[0];
+            if (is_array($row)) {
+                continue;
+            }
+            $row = $row->getProxiedInstance()->all();
             $continue = $this->collectValue($row, $current, Distill::TYPE_ROW.':'.$type);
         }
 

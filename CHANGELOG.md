@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3 (2023-08-14)
+
+- [fix] Error when distilling sets that have no fields
+
 ## 0.4.2 (2023-06-08)
 
 - [fix] Error using `distill:bard` with an empty Bard field
