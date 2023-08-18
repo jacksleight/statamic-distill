@@ -169,7 +169,11 @@ Each item returned includes an `info` object that contains the following values:
 
 ### Distill Bard Tag
 
-The `{{ distill:bard }}` tag returns Bard data only and in a format that is compatible with the `bard_*` modifiers.
+The `{{ distill:bard }}` tag returns all Bard data in a format that is compatible with the `bard_*` modifiers.
+
+### Distill Text Tag
+
+The `{{ distill:text }}` tag returns all plain text from `text`, `textarea`, `bard` and  `markdown` fields.
 
 ### Distill Count Tag
 

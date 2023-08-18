@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0 (2023-08-18)
+
+- [new] {{ distill:text }} tag that extracts plain text
+- [fix] Fix search key mapping error
+
 ## 0.4.3 (2023-08-14)
 
 - [fix] Error when distilling sets that have no fields
