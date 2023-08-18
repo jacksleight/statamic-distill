@@ -200,7 +200,7 @@ $youtubeVideoSets = Distill::query($value)
 
 #### Bard & Text Values
 
-You can extract Bard data and plain text manually in PHP using the `Distill::bard()` and `Distill::text()` method. For example to create a plain text computed value of a page builder you could do this: 
+You can extract Bard data and plain text manually in PHP using the `Distill::bard()` and `Distill::text()` methods. For example to create a plain text computed value of a page builder you could do one of these: 
 
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
