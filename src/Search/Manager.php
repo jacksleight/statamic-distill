@@ -72,6 +72,7 @@ class Manager
             ->pluck('searchables')
             ->flatten()
             ->unique()
+            ->filter(fn ($key) => Str::startsWith($key, 'distill:'))
             ->map(fn ($key) => Str::after($key, ':'));
 
         $keys = $this->restructureKeys($keys)
@@ -83,7 +84,7 @@ class Manager
             $keys = $keys->only($source->taxonomy()->handle());
         }
 
-        return $keys->first();
+        return $keys->first() ?? [];
     }
 
     public function restructureKeys($keys)
