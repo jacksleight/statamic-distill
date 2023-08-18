@@ -2,6 +2,7 @@
 
 namespace JackSleight\StatamicDistill\Tags;
 
+use JackSleight\StatamicDistill\Facades\Distill as Facade;
 use JackSleight\StatamicDistill\Tags\Distill\Items;
 use Statamic\Tags\Concerns;
 use Statamic\Tags\Tags;
@@ -40,12 +41,26 @@ class Distill extends Tags
         $this->params->put('type', 'value:bard');
         $this->params->put('include_source', true);
 
-        return $this->items()->get()
-            ->map->value
-            ->map->raw()
-            ->filter()
-            ->flatten(1)
-            ->all();
+        $items = $this->items()->get();
+
+        return Facade::extractBard($items);
+    }
+
+    public function text()
+    {
+        $this->prepare();
+
+        $this->params->put('type', [
+            'value:text',
+            'value:textarea',
+            'value:bard',
+            'value:markdown',
+        ]);
+        $this->params->put('include_source', true);
+
+        $items = $this->items()->get();
+
+        return Facade::extractText($items);
     }
 
     protected function items()

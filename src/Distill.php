@@ -2,7 +2,9 @@
 
 namespace JackSleight\StatamicDistill;
 
+use JackSleight\StatamicDistill\Items\ItemCollection;
 use JackSleight\StatamicDistill\Items\QueryBuilder;
+use Statamic\Statamic;
 
 class Distill
 {
@@ -61,14 +63,52 @@ class Distill
 
     public function bard($value)
     {
-        return (new QueryBuilder($value))
+        $items = (new QueryBuilder($value))
             ->type('value:bard')
             ->includeSource(true)
-            ->get()
+            ->get();
+
+        return $this->extractBard($items);
+    }
+
+    public function extractBard(ItemCollection $items)
+    {
+        return $items
             ->map->value
+            ->filter(fn ($value) => $value->fieldtype()->handle() === 'bard')
             ->map->raw()
             ->filter()
             ->flatten(1)
             ->all();
+    }
+
+    public function text($value)
+    {
+        $items = (new QueryBuilder($value))
+            ->type([
+                'value:text',
+                'value:textarea',
+                'value:bard',
+                'value:markdown',
+            ])
+            ->includeSource(true)
+            ->get();
+
+        return $this->extractText($items);
+    }
+
+    public function extractText(ItemCollection $items)
+    {
+        return $items
+            ->map->value
+            ->map(fn ($value) => match ($value->fieldtype()->handle()) {
+                'text' => $value->value(),
+                'textarea' => $value->value(),
+                'bard' => Statamic::modify($value)->bardText()->fetch(),
+                'markdown' => Statamic::modify($value)->stripTags()->fetch(),
+                default => null,
+            })
+            ->filter()
+            ->join(' ');
     }
 }
