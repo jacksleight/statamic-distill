@@ -13,13 +13,6 @@ This Statamic addon allows you to filter, fetch or index the individual values, 
 * Filtering, sorting and paginating a Grid field or raw array just like a collection
 * Adding individual sections of a page to a search index (Pro)
 
-## Editions
-
-| Feature                      | Free | Pro   |
-| ---------------------------- | :--: | :---: |
-| Tags & Query Builder         | ●    | ●     |
-| Search                       |      | ●     |
-
 ## Installation
 
 You can search for this addon in the `Tools > Addons` section of the Statamic control panel and click **install**, or run the following command from your project root:
@@ -228,12 +221,8 @@ When a search is run the section headings will be searched, and any matching set
 
 <!-- statamic:hide -->
 
-## Licencing
+## Sponsoring 
 
-Distill Pro is not free software. You will need to purchase a license via the [Statamic Marketplace](https://statamic.com/addons/jacksleight/distill) to use it in production.
-
-## Contributing
-
-Contributions are very welcome, however please bear in mind that while Distill's source code is open source and publicly available, it is proprietary. Everything in this repo, including any community-contributed code, is the property of Jack Sleight.
+This addon is completely free to use. However fixing bugs, adding features and helping users takes time and effort. If you find this addon useful and would like to support its development any [contribution](https://github.com/sponsors/jacksleight) would be greatly appreciated. Thanks! 🙂
 
 <!-- /statamic:hide -->

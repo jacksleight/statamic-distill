@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0 (2023-10-23)
+
+- Distill is now completely free! If you have the Pro edition specified in `config/statamic/editions.php` remove it.
+
 ## 0.5.0 (2023-08-18)
 
 - [new] {{ distill:text }} tag that extracts plain text
