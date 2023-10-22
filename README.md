@@ -11,7 +11,7 @@ This Statamic addon allows you to filter, fetch or index the individual values, 
 * Extracting the text from every Bard field within a replicator
 * Finding every asset in the page, or just the first image
 * Filtering, sorting and paginating a Grid field or raw array just like a collection
-* Adding individual sections of a page to a search index (Pro)
+* Adding individual sections of a page to a search index
 
 ## Installation
 
@@ -51,7 +51,7 @@ composer require jacksleight/statamic-distill
 {{ /distill:parts_list }}
 ```
 
-### Add sections of a page to a search index (Pro)
+### Add sections of a page to a search index
 
 ```php
 // config/statamic/search.php
@@ -211,7 +211,7 @@ Collection::computed('pages', 'builder_text', function ($entry) {
 });
 ```
 
-### Search Integration (Pro)
+### Search Integration
 
 Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Items from entries and terms are supported. 
 
