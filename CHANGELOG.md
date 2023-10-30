@@ -2,7 +2,7 @@
 
 ## 0.6.0 (2023-10-30)
 
-- Distill is now completely free!
+- Distill is now completely free and MIT licenced!
 
 ## 0.5.0 (2023-08-18)
 
