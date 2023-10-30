@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.0 (2023-10-23)
+## 0.6.0 (2023-10-30)
 
 - Distill is now completely free! If you have the Pro edition specified in `config/statamic/editions.php` remove it.
 
