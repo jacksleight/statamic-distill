@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1 (2023-11-08)
+
+- [fix] Error when no Distill searchables are configured
+
 ## 0.6.0 (2023-10-30)
 
 - Distill is now completely free and MIT licenced!
