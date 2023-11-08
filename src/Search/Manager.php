@@ -74,14 +74,22 @@ class Manager
             ->unique()
             ->filter(fn ($key) => Str::startsWith($key, 'distill:'))
             ->map(fn ($key) => Str::after($key, ':'));
+        if (! $keys->count()) {
+            return [];
+        }
 
-        $keys = $this->restructureKeys($keys)
-            ->only($type)
-            ->first();
+        $keys = $this->restructureKeys($keys)->only($type);
+        if (! $keys->count()) {
+            return [];
+        }
+
         if ($type === 'collection') {
-            $keys = $keys->only($source->collection()->handle());
+            $keys = $keys->first()->only($source->collection()->handle());
         } elseif ($type === 'taxonomy') {
-            $keys = $keys->only($source->taxonomy()->handle());
+            $keys = $keys->first()->only($source->taxonomy()->handle());
+        }
+        if (! $keys->count()) {
+            return [];
         }
 
         return $keys->first() ?? [];
