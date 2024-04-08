@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2 (2024-04-08)
+
+- [fix] Support for `Values` objects
+
 ## 0.6.1 (2023-11-08)
 
 - [fix] Error when no Distill searchables are configured
