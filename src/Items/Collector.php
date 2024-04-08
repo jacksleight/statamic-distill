@@ -11,6 +11,7 @@ use Statamic\Contracts\Entries\Entry;
 use Statamic\Contracts\Query\Builder;
 use Statamic\Contracts\Taxonomies\Term;
 use Statamic\Fields\Value;
+use Statamic\Fields\Values;
 use Statamic\Fieldtypes\Bard;
 use Statamic\Structures\Page;
 use Statamic\Support\Arr;
@@ -53,6 +54,9 @@ class Collector
 
     protected function collectValue($value, $path = [], $type = null)
     {
+        if ($value instanceof Values) {
+            $value = $value->getProxiedInstance();
+        }
         if ($value instanceof Collection) {
             $value = $value->all();
         }
