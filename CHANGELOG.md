@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.3 (2024-05-07)
+
+- Statamic 5 support
+
 ## 0.6.2 (2024-04-08)
 
 - [fix] Support for `Values` objects
