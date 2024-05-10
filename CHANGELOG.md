@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.4 (2024-05-10)
+
+- [fix] Augmentation error with Statamic 5
+
 ## 0.6.3 (2024-05-07)
 
 - Statamic 5 support
