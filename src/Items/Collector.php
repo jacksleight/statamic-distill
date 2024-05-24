@@ -239,7 +239,7 @@ class Collector
                 continue;
             }
             $item = $data[$index];
-            if (! $item['enabled']) {
+            if (! Arr::has($item, 'enabled')) {
                 continue;
             }
             $set = $value->fieldtype()->augment([$item])[0];
