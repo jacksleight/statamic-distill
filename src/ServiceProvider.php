@@ -14,6 +14,7 @@ class ServiceProvider extends AddonServiceProvider
 
     protected $modifiers = [
         Modifiers\DistillBard::class,
+        Modifiers\DistillText::class,
     ];
 
     public function bootAddon()
