@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0 (2024-05-28)
+
+- [fix] Add some resiliency by @edalzell
+- [new] Blade/PHP only distill_text modifier
+
 ## 0.6.4 (2024-05-10)
 
 - [fix] Augmentation error with Statamic 5
