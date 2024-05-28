@@ -239,7 +239,7 @@ class Collector
                 continue;
             }
             $item = $data[$index];
-            if (! array_get($item, 'enabled', true)) {
+            if (! Arr::get($item, 'enabled', true)) {
                 continue;
             }
             if (empty($augmentedValue = $value->fieldtype()->augment([$item]))) {
@@ -274,10 +274,13 @@ class Collector
             }
             $node = $nodes[$index];
             if ($node['type'] === 'set') {
-                if (! array_get($node, 'enabled', true)) {
+                if (! Arr::get($node, 'enabled', true)) {
                     continue;
                 }
-                $set = $fieldtype->augment([$node])[0];
+                if (empty($augmentedValue = $fieldtype->augment([$node]))) {
+                    continue;
+                }
+                $set = $augmentedValue[0];
                 if (is_array($set)) {
                     continue;
                 }
