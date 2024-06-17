@@ -69,4 +69,10 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
     {
         return new Result($this, 'distill:'.$this->info->type);
     }
+
+    // @todo Remove this when Statamic v4 is dropped and use augmentedValue instead
+    public function internalValue($key)
+    {
+        return $this->data[$key] ?? null;
+    }
 }

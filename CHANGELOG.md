@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1 (2024-06-17)
+
+- [fix] Extract bard/text augmentation regression with Statamic 4
+
 ## 0.7.0 (2024-05-28)
 
 - [fix] Add some resiliency by @edalzell
