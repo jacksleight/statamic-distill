@@ -104,7 +104,7 @@ class Distill
             ->map(fn ($value) => match ($value->fieldtype()->handle()) {
                 'text' => $value->value(),
                 'textarea' => $value->value(),
-                'bard' => Statamic::modify($value)->bardText()->fetch(),
+                'bard' => is_string($value->raw()) ? $value->raw() : Statamic::modify($value)->bardText()->fetch(),
                 'markdown' => Statamic::modify($value)->stripTags()->fetch(),
                 default => null,
             })
