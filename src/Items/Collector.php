@@ -258,7 +258,8 @@ class Collector
 
     protected function collectBard(Value $value, $path)
     {
-        if (is_string($raw = $value->raw())) {
+        $raw = $value->raw();
+        if (is_string($raw)) {
             return true;
         }
 
