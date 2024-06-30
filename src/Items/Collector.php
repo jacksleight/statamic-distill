@@ -258,7 +258,12 @@ class Collector
 
     protected function collectBard(Value $value, $path)
     {
-        return $this->collectBardNodes($value->raw() ?? [], $path, $value->fieldtype());
+        $raw = $value->raw();
+        if (is_string($raw)) {
+            return true;
+        }
+
+        return $this->collectBardNodes($raw ?? [], $path, $value->fieldtype());
     }
 
     protected function collectBardNodes($nodes, $path, Bard $fieldtype)
