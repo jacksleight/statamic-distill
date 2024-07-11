@@ -33,6 +33,8 @@ class Items
 
     protected $maxDepth;
 
+    protected $unique;
+
     public function __construct($params)
     {
         $this->parseParameters($params);
@@ -56,6 +58,7 @@ class Items
         $this->queryPath($query);
         $this->queryExpand($query);
         $this->queryDepth($query);
+        $this->queryUnique($query);
         $this->queryConditions($query);
         $this->queryStills($query);
         $this->queryOrderBys($query);
@@ -121,6 +124,13 @@ class Items
         }
     }
 
+    protected function queryUnique($query)
+    {
+        if (isset($this->unique)) {
+            $query->unique($this->unique);
+        }
+    }
+
     public function queryStills($query)
     {
         $this->parseQueryStills()
@@ -153,5 +163,6 @@ class Items
         $this->depth = $this->params->get('depth');
         $this->minDepth = $this->params->get('minDepth');
         $this->maxDepth = $this->params->get('maxDepth');
+        $this->unique = $this->params->get('unique');
     }
 }

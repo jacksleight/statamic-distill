@@ -24,6 +24,8 @@ class Collector
 
     protected $value;
 
+    public $dtids = [];
+
     public $store = [];
 
     public $items = [];
@@ -44,6 +46,7 @@ class Collector
 
         $this->value = $value;
 
+        $this->dtids = [];
         $this->store = [];
         $this->items = [];
 
@@ -107,6 +110,7 @@ class Collector
         ];
 
         $item = $value;
+        $dtid = $this->getDtid($primary, $type, $value);
 
         if ($primary === Distill::TYPE_VALUE || in_array($type, [
             Distill::TYPE_RAW_BOOLEAN,
@@ -128,8 +132,11 @@ class Collector
 
         $this->store[$self] = $item;
 
-        if ($this->query->shouldCollect($item, $depth)) {
+        if ($this->query->shouldCollect($item, $depth, $dtid, $this->dtids)) {
             $this->items[] = $item;
+            if (isset($dtid)) {
+                $this->dtids[] = $dtid;
+            }
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
                 if (isset($this->store[$parent])) {
@@ -429,5 +436,24 @@ class Collector
         }
 
         return $continue;
+    }
+
+    protected function getDtid($primary, $type, $value)
+    {
+        if (in_array($primary, [
+            Distill::TYPE_ENTRY,
+            Distill::TYPE_TERM,
+            Distill::TYPE_ASSET,
+            Distill::TYPE_USER,
+        ])) {
+            return $type.'|'.$value->id();
+        }
+
+        if (in_array($primary, [
+            Distill::TYPE_SET,
+            Distill::TYPE_ROW,
+        ]) && $value['id']) {
+            return $type.'|'.$value['id'];
+        }
     }
 }
