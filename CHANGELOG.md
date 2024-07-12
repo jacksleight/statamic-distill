@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0 (2024-07-12)
+
+- [new] Ability to fetch only unique items
+
 ## 0.7.2 (2024-06-30)
 
 - [fix] Bard fields with string values by @edalzell
