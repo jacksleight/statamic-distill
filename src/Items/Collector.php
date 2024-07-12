@@ -105,7 +105,7 @@ class Collector
             // 'index' => $indexed ? Arr::last($path) : null,
             'source' => &$this->value,
             'parent' => null,
-            'signature' => $this->generateSignature($primary, $type, $value),
+            'signature' => $this->generateSignature($primary, $value),
             // 'prev' => null,
             // 'next' => null,
         ];
@@ -438,7 +438,7 @@ class Collector
         return $continue;
     }
 
-    protected function generateSignature($primary, $type, $value)
+    protected function generateSignature($primary, $value)
     {
         if (in_array($primary, [
             Distill::TYPE_ENTRY,
@@ -454,27 +454,3 @@ class Collector
         return md5($reference);
     }
 }
-
-const TYPE_ROW = 'row';
-
-const TYPE_SET = 'set';
-
-const TYPE_TERM = 'term';
-
-const TYPE_USER = 'user';
-
-const TYPE_VALUE = 'value';
-
-const TYPE_VALUE_ASSETS = 'value:assets';
-
-const TYPE_VALUE_BARD = 'value:bard';
-
-const TYPE_VALUE_ENTRIES = 'value:entries';
-
-const TYPE_VALUE_GRID = 'value:grid';
-
-const TYPE_VALUE_REPLICATOR = 'value:replicator';
-
-const TYPE_VALUE_TERMS = 'value:terms';
-
-const TYPE_VALUE_USERS = 'value:users';
