@@ -24,6 +24,8 @@ class Collector
 
     protected $value;
 
+    public $index = [];
+
     public $store = [];
 
     public $items = [];
@@ -44,6 +46,7 @@ class Collector
 
         $this->value = $value;
 
+        $this->index = [];
         $this->store = [];
         $this->items = [];
 
@@ -102,6 +105,7 @@ class Collector
             // 'index' => $indexed ? Arr::last($path) : null,
             'source' => &$this->value,
             'parent' => null,
+            'signature' => $this->generateSignature($primary, $value),
             // 'prev' => null,
             // 'next' => null,
         ];
@@ -128,8 +132,11 @@ class Collector
 
         $this->store[$self] = $item;
 
-        if ($this->query->shouldCollect($item, $depth)) {
+        if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
+            $this->index[] = $item->info->signature;
+            if (isset($dtid)) {
+            }
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
                 if (isset($this->store[$parent])) {
@@ -429,5 +436,21 @@ class Collector
         }
 
         return $continue;
+    }
+
+    protected function generateSignature($primary, $value)
+    {
+        if (in_array($primary, [
+            Distill::TYPE_ENTRY,
+            Distill::TYPE_TERM,
+            Distill::TYPE_ASSET,
+            Distill::TYPE_USER,
+        ])) {
+            $reference = $value->reference();
+        } else {
+            $reference = uniqid();
+        }
+
+        return md5($reference);
     }
 }

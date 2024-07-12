@@ -12,6 +12,7 @@ This Statamic addon allows you to filter, fetch or index the individual values, 
 * Finding every asset in the page, or just the first image
 * Filtering, sorting and paginating a Grid field or raw array just like a collection
 * Adding individual sections of a page to a search index
+* Refactoring nested data and sets
 
 ## Installation
 
@@ -26,7 +27,7 @@ composer require jacksleight/statamic-distill
 ### Find every image in the page
 
 ```antlers
-{{ distill:page type="asset:*" is_image:is="true" }}
+{{ distill:page type="asset:*" is_image:is="true" unique="true" }}
     {{ url }}
 {{ /distill:page }}
 ```
@@ -121,6 +122,12 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The minimim depth to find items from.
 * **max_depth (integer)**  
   The maximum depth to find items from.
+* **unique (boolean, false)**  
+  Filter out duplicate items. Filtering is only applied to these types:
+  * `entry`
+  * `term`
+  * `asset`
+  * `user`
 * **expand (string|array, all)**  
   Which types to expand and walk into, asterisks can be used as a wildcard and multiple types can be pipe delimited, options are:
   * `set:[handle]`
@@ -193,22 +200,18 @@ $youtubeVideoSets = Distill::query($value)
 
 #### Bard & Text Values
 
-You can extract Bard data and plain text manually in PHP using the `Distill::bard()` and `Distill::text()` methods. For example to create a plain text computed value of a page builder you could do one of these: 
+You can extract Bard data and plain text manually in PHP using the `Distill::bard()` and `Distill::text()` methods. For example to create a plain text value of a page builder you could do one of these: 
 
 ```php
 use JackSleight\StatamicDistill\Facades\Distill;
 use Statamic\Facades\Collection;
 use Statamic\Statamic;
 
-Collection::computed('pages', 'builder_bard', function ($entry) {
-    $value = $entry->augmentedValue('builder');
-    return Statamic::modify(Distill::bard($value))->bardText()->fetch();
-});
+$value = $entry->augmentedValue('content');
+$data = Distill::bard($value);
 
-Collection::computed('pages', 'builder_text', function ($entry) {
-    $value = $entry->augmentedValue('builder');
-    return Distill::text($value);
-});
+$value = $entry->augmentedValue('builder');
+$text = Distill::text($value);
 ```
 
 ### Search Integration

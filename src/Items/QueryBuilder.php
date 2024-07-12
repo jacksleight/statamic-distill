@@ -23,6 +23,8 @@ class QueryBuilder extends IteratorBuilder
 
     protected $maxDepth;
 
+    protected $unique = false;
+
     public function __construct($from)
     {
         $this->from = $from;
@@ -74,6 +76,13 @@ class QueryBuilder extends IteratorBuilder
         return $this;
     }
 
+    public function unique($value)
+    {
+        $this->unique = $value;
+
+        return $this;
+    }
+
     public function expand($value)
     {
         $this->expand = $this->matchRegex($value, ':');
@@ -100,7 +109,7 @@ class QueryBuilder extends IteratorBuilder
         return ItemCollection::make($items);
     }
 
-    public function shouldCollect($item, $depth)
+    public function shouldCollect($item, $depth, $index)
     {
         if (! $this->includeSource && $depth === 0) {
             return false;
@@ -111,6 +120,10 @@ class QueryBuilder extends IteratorBuilder
         }
 
         if (isset($this->maxDepth) && $depth > $this->maxDepth) {
+            return false;
+        }
+
+        if ($this->unique && in_array($item->info->signature, $index)) {
             return false;
         }
 
