@@ -24,7 +24,7 @@ class Collector
 
     protected $value;
 
-    public $dtids = [];
+    public $index = [];
 
     public $store = [];
 
@@ -46,7 +46,7 @@ class Collector
 
         $this->value = $value;
 
-        $this->dtids = [];
+        $this->index = [];
         $this->store = [];
         $this->items = [];
 
@@ -105,12 +105,12 @@ class Collector
             // 'index' => $indexed ? Arr::last($path) : null,
             'source' => &$this->value,
             'parent' => null,
+            'signature' => $this->generateSignature($primary, $type, $value),
             // 'prev' => null,
             // 'next' => null,
         ];
 
         $item = $value;
-        $dtid = $this->getDtid($primary, $type, $value);
 
         if ($primary === Distill::TYPE_VALUE || in_array($type, [
             Distill::TYPE_RAW_BOOLEAN,
@@ -132,10 +132,10 @@ class Collector
 
         $this->store[$self] = $item;
 
-        if ($this->query->shouldCollect($item, $depth, $dtid, $this->dtids)) {
+        if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
+            $this->index[] = $item->info->signature;
             if (isset($dtid)) {
-                $this->dtids[] = $dtid;
             }
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
@@ -438,7 +438,7 @@ class Collector
         return $continue;
     }
 
-    protected function getDtid($primary, $type, $value)
+    protected function generateSignature($primary, $type, $value)
     {
         if (in_array($primary, [
             Distill::TYPE_ENTRY,
@@ -446,14 +446,35 @@ class Collector
             Distill::TYPE_ASSET,
             Distill::TYPE_USER,
         ])) {
-            return $type.'|'.$value->id();
+            $reference = $value->reference();
+        } else {
+            $reference = uniqid();
         }
 
-        if (in_array($primary, [
-            Distill::TYPE_SET,
-            Distill::TYPE_ROW,
-        ]) && $value['id']) {
-            return $type.'|'.$value['id'];
-        }
+        return md5($reference);
     }
 }
+
+const TYPE_ROW = 'row';
+
+const TYPE_SET = 'set';
+
+const TYPE_TERM = 'term';
+
+const TYPE_USER = 'user';
+
+const TYPE_VALUE = 'value';
+
+const TYPE_VALUE_ASSETS = 'value:assets';
+
+const TYPE_VALUE_BARD = 'value:bard';
+
+const TYPE_VALUE_ENTRIES = 'value:entries';
+
+const TYPE_VALUE_GRID = 'value:grid';
+
+const TYPE_VALUE_REPLICATOR = 'value:replicator';
+
+const TYPE_VALUE_TERMS = 'value:terms';
+
+const TYPE_VALUE_USERS = 'value:users';

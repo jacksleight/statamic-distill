@@ -109,12 +109,8 @@ class QueryBuilder extends IteratorBuilder
         return ItemCollection::make($items);
     }
 
-    public function shouldCollect($item, $depth, $ref, $refs)
+    public function shouldCollect($item, $depth, $index)
     {
-        if ($this->unique && isset($ref) && in_array($ref, $refs)) {
-            return false;
-        }
-
         if (! $this->includeSource && $depth === 0) {
             return false;
         }
@@ -124,6 +120,10 @@ class QueryBuilder extends IteratorBuilder
         }
 
         if (isset($this->maxDepth) && $depth > $this->maxDepth) {
+            return false;
+        }
+
+        if ($this->unique && in_array($item->info->signature, $index)) {
             return false;
         }
 

@@ -123,9 +123,7 @@ The `{{ distill:* }}` tag accepts the following parameters:
 * **max_depth (integer)**  
   The maximum depth to find items from.
 * **unique (boolean, false)**  
-  Filter out duplicate items. Only affects types that have unique identifiers, which are:
-  * `set`
-  * `row`
+  Filter out duplicate items. Filtering is only applied to these types:
   * `entry`
   * `term`
   * `asset`
