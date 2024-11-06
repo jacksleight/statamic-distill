@@ -4,8 +4,6 @@
 
 <!-- /statamic:hide -->
 
-> 🚧 **Work In Progress:** Some things may change/break. [Feedback welcome](https://github.com/jacksleight/statamic-distill/issues).
-
 This Statamic addon allows you to filter, fetch or index the individual values, sets and relations within your entries, from both root and deeply nested fields. It's useful for things like:
 
 * Extracting the text from every Bard field within a replicator
@@ -50,42 +48,6 @@ composer require jacksleight/statamic-distill
         <a href="{{ next_page }}">→</a>
     {{ /paginate }}
 {{ /distill:parts_list }}
-```
-
-### Add sections of a page to a search index
-
-```php
-// config/statamic/search.php
-'searchables' => [
-    'distill:collection:pages:sections',
-],
-'fields' => ['heading'],
-```
-```php
-// app/Stills/Sections.php
-namespace App\Stills;
-
-use JackSleight\StatamicDistill\Stills\Still;
-
-class Sections extends Still
-{
-    public function apply($query, $values)
-    {
-        $query->path('builder.*')->type('set:section');
-    }
-}
-```
-```antlers
-{{# resources/views/search.antlers.html #}}
-{{ search:results }}
-    {{ if result_type === 'distill:set:section' }}
-        <a href="{{ info:source:url }}#{{ id }}">
-            {{ title }}
-        </a>
-    {{ else }}
-        ...
-    {{ /if }}
-{{ /search:results }}
 ```
 
 ## Usage
@@ -218,7 +180,41 @@ $text = Distill::text($value);
 
 Distill can add the results of a query to a search index, so they appear as their own individual search results. You can then use hash/fragment URLs to link to those items within the source page. Items from entries and terms are supported. 
 
-Check out the example above, here's a brief explanation of what that example is doing:
+```php
+// config/statamic/search.php
+'searchables' => [
+    'distill:collection:pages:sections',
+],
+'fields' => ['heading'],
+```
+```php
+// app/Stills/Sections.php
+namespace App\Stills;
+
+use JackSleight\StatamicDistill\Stills\Still;
+
+class Sections extends Still
+{
+    public function apply($query, $values)
+    {
+        $query->path('builder.*')->type('set:section');
+    }
+}
+```
+```antlers
+{{# resources/views/search.antlers.html #}}
+{{ search:results }}
+    {{ if result_type === 'distill:set:section' }}
+        <a href="{{ info:source:url }}#{{ id }}">
+            {{ title }}
+        </a>
+    {{ else }}
+        ...
+    {{ /if }}
+{{ /search:results }}
+```
+
+Here's a brief explanation of what that's doing:
 
 1. `distill:collection:articles:sections` - Use the Sections still to extract items from entries within the articles collection
 2. `$query->path('builder.*')` - Extract all the items that are direct children of the "builder" field (the sets)
