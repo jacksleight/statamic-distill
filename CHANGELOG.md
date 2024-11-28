@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1 (2024-11-28)
+
+- [fix] Bard set key paths
+
 ## 0.8.0 (2024-07-12)
 
 - [new] Ability to fetch only unique items
