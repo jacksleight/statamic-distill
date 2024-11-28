@@ -135,21 +135,12 @@ class Collector
         if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
             $this->index[] = $item->info->signature;
-            if (isset($dtid)) {
-            }
             if ($path) {
                 $parent = implode('.', array_slice($path, 0, -1));
                 if (isset($this->store[$parent])) {
                     $this->store[$self]->info->setParent($this->store[$parent]);
                 }
             }
-            // if ($path && $indexed) {
-            //     $prev = implode('.', array_merge(array_slice($path, 0, -1), [Arr::last($path) - 1]));
-            //     if (isset($this->store[$prev])) {
-            //         $this->store[$self]->info->setPrev($this->store[$prev]);
-            //         $this->store[$prev]->info->setNext($this->store[$self]);
-            //     }
-            // }
         }
 
         $continue = $this->query->shouldContinue(count($this->items));
@@ -297,7 +288,7 @@ class Collector
                     continue;
                 }
                 $set = $set->getProxiedInstance()->all();
-                $continue = $this->collectValue($set, $path, Distill::TYPE_SET.':'.$set['type']);
+                $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type']);
             } else {
                 $continue = $this->collectBardNode($node, $current, $fieldtype);
             }
