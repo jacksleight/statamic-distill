@@ -130,17 +130,17 @@ class Collector
 
         $item->setSupplement('info', new Info($info));
 
-        $this->store[$self] = $item;
+        if ($path) {
+            $this->store[$self] = $item;
+            $parent = implode('.', array_slice($path, 0, -1));
+            if (isset($this->store[$parent])) {
+                $this->store[$self]->info->setParent($this->store[$parent]);
+            }
+        }
 
         if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
             $this->index[] = $item->info->signature;
-            if ($path) {
-                $parent = implode('.', array_slice($path, 0, -1));
-                if (isset($this->store[$parent])) {
-                    $this->store[$self]->info->setParent($this->store[$parent]);
-                }
-            }
         }
 
         $continue = $this->query->shouldContinue(count($this->items));
