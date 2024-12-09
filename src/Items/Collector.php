@@ -55,7 +55,7 @@ class Collector
         return $this->items;
     }
 
-    protected function collectValue($value, $path = [], $type = null)
+    protected function collectValue($value, $path = [], $type = null, $inner = [])
     {
         if ($value instanceof Values) {
             $value = $value->getProxiedInstance();
@@ -149,6 +149,9 @@ class Collector
         }
 
         if ($depth === 0 || $this->query->shouldExpand($item, $depth)) {
+            if ($inner) {
+                $path = array_merge($path, $inner);
+            }
             if (in_array($primary, [
                 Distill::TYPE_ENTRY,
                 Distill::TYPE_TERM,
@@ -288,7 +291,7 @@ class Collector
                     continue;
                 }
                 $set = $set->getProxiedInstance()->all();
-                $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type']);
+                $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type'], ['attrs', 'values']);
             } else {
                 $continue = $this->collectBardNode($node, $current, $fieldtype);
             }
