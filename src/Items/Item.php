@@ -5,16 +5,18 @@ namespace JackSleight\StatamicDistill\Items;
 use ArrayAccess;
 use Illuminate\Contracts\Support\Arrayable;
 use Statamic\Contracts\Data\Augmentable;
+use Statamic\Contracts\Query\ContainsQueryableValues;
 use Statamic\Contracts\Search\Result as ResultContract;
 use Statamic\Contracts\Search\Searchable as SearchableContract;
 use Statamic\Data\ContainsSupplementalData;
 use Statamic\Data\HasAugmentedData;
+use Statamic\Fields\Value;
 use Statamic\Search\Result;
 use Statamic\Search\Searchable;
 
-class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
+class Item implements Arrayable, ArrayAccess, Augmentable, ContainsQueryableValues, SearchableContract
 {
-    use HasAugmentedData, ContainsSupplementalData, Searchable;
+    use ContainsSupplementalData, HasAugmentedData, Searchable;
 
     protected $data;
 
@@ -68,6 +70,17 @@ class Item implements Augmentable, ArrayAccess, Arrayable, SearchableContract
     public function toSearchResult(): ResultContract
     {
         return new Result($this, 'distill:'.$this->info->type);
+    }
+
+    public function getQueryableValue(string $field)
+    {
+        $value = $this->data[$field] ?? null;
+
+        if ($value instanceof Value) {
+            $value = $value->value();
+        }
+
+        return $value;
     }
 
     // @todo Remove this when Statamic v4 is dropped and use augmentedValue instead
