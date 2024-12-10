@@ -26,9 +26,9 @@ class Collector
 
     public $index = [];
 
-    public $store = [];
-
     public $items = [];
+
+    public $parent = null;
 
     public function __construct(QueryBuilder $query)
     {
@@ -47,15 +47,15 @@ class Collector
         $this->value = $value;
 
         $this->index = [];
-        $this->store = [];
         $this->items = [];
+        $this->parent = null;
 
         $this->collectValue($this->value);
 
         return $this->items;
     }
 
-    protected function collectValue($value, $path = [], $type = null)
+    protected function collectValue($value, $path = [], $type = null, $setType = null)
     {
         if ($value instanceof Values) {
             $value = $value->getProxiedInstance();
@@ -101,13 +101,9 @@ class Collector
         $info = [
             'type' => $type,
             'path' => $self,
-            // 'name' => ! $indexed ? Arr::last($path) : null,
-            // 'index' => $indexed ? Arr::last($path) : null,
             'source' => &$this->value,
-            'parent' => null,
+            'parent' => $this->parent,
             'signature' => $this->generateSignature($primary, $value),
-            // 'prev' => null,
-            // 'next' => null,
         ];
 
         $item = $value;
@@ -130,14 +126,6 @@ class Collector
 
         $item->setSupplement('info', new Info($info));
 
-        if ($path) {
-            $this->store[$self] = $item;
-            $parent = implode('.', array_slice($path, 0, -1));
-            if (isset($this->store[$parent])) {
-                $this->store[$self]->info->setParent($this->store[$parent]);
-            }
-        }
-
         if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
             $this->index[] = $item->info->signature;
@@ -148,7 +136,21 @@ class Collector
             return false;
         }
 
+        if ($setType === Distill::SET_TYPE_BARD) {
+            $path = array_merge($path, ['attrs', 'values']);
+        }
+
         if ($depth === 0 || $this->query->shouldExpand($item, $depth)) {
+            if (in_array($type, [
+                Distill::TYPE_VALUE_REPLICATOR,
+                Distill::TYPE_VALUE_BARD,
+                Distill::TYPE_VALUE_GRID,
+            ]) || in_array($primary, [
+                Distill::TYPE_SET,
+                Distill::TYPE_ROW,
+            ])) {
+                $this->parent = $item;
+            }
             if (in_array($primary, [
                 Distill::TYPE_ENTRY,
                 Distill::TYPE_TERM,
@@ -248,7 +250,7 @@ class Collector
                 continue;
             }
             $set = $set->getProxiedInstance()->all();
-            $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type']);
+            $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type'], Distill::SET_TYPE_REPLICATOR);
         }
 
         return $continue;
@@ -288,7 +290,7 @@ class Collector
                     continue;
                 }
                 $set = $set->getProxiedInstance()->all();
-                $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type']);
+                $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type'], Distill::SET_TYPE_BARD);
             } else {
                 $continue = $this->collectBardNode($node, $current, $fieldtype);
             }
