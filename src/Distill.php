@@ -56,6 +56,10 @@ class Distill
 
     const TYPE_VALUE_USERS = 'value:users';
 
+    const SET_TYPE_BARD = 'bard';
+
+    const SET_TYPE_REPLICATOR = 'replicator';
+
     public function query($value)
     {
         return new QueryBuilder($value);
