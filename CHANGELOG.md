@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2 (2025-09-05)
+
+- Statamic 6 support
+
 ## 0.8.1 (2024-11-28)
 
 - [fix] Bard set key paths
