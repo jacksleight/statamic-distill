@@ -1,12 +1,18 @@
 # Changelog
 
-## 0.8.3 (2025-11-06)
+## 0.8.4 (2025-11-06)
 
 - [fix] Unknown double type when passing floats
 
-## 0.8.2 (2025-09-05)
+## 0.8.3 (2025-09-05)
 
 - Statamic 6 support
+
+## 0.8.2 (2024-12-10)
+
+- [fix] Incorrect bard set value paths
+- [fix] Error when using where conditions
+- [fix] Uncollected parent references
 
 ## 0.8.1 (2024-11-28)
 
