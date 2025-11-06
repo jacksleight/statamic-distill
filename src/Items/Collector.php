@@ -79,6 +79,9 @@ class Collector
                 $type = Distill::TYPE_VALUE.':'.optional($value->fieldtype())->handle() ?? 'unknown';
             } else {
                 $raw = Str::slug(gettype($value));
+                if ($raw === 'double') {
+                    $raw = 'float';
+                }
                 $type = Distill::TYPE_RAW.':'.$raw;
                 if (! in_array($type, [
                     Distill::TYPE_RAW_ARRAY,

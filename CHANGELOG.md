@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.5 (2025-11-06)
+
+- [fix] Unknown double type when passing floats again
+
 ## 0.8.4 (2025-11-06)
 
 - [fix] Unknown double type when passing floats
