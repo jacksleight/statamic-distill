@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.3 (2025-11-06)
+
+- [fix] Unknown double type when passing floats
+
 ## 0.8.2 (2025-09-05)
 
 - Statamic 6 support

@@ -22,7 +22,7 @@ class Distill
 
     const TYPE_RAW_BOOLEAN = 'raw:boolean';
 
-    const TYPE_RAW_FLOAT = 'raw:float';
+    const TYPE_RAW_FLOAT = 'raw:double';
 
     const TYPE_RAW_INTEGER = 'raw:integer';
 
