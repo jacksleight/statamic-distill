@@ -94,7 +94,7 @@ class Collector
                 ])) {
                     throw new Exception('Unsupported raw type: '.$raw);
                 } elseif ($type === Distill::TYPE_RAW_OBJECT && ! $value instanceof stdClass) {
-                    throw new Exception('Unsupported object type: '.get_class($value));
+                    return true;
                 }
             }
         }
