@@ -2,7 +2,6 @@
 
 namespace JackSleight\StatamicDistill\Items;
 
-use Exception;
 use Illuminate\Support\Collection;
 use JackSleight\StatamicDistill\Distill;
 use Statamic\Contracts\Assets\Asset;
@@ -92,8 +91,9 @@ class Collector
                     Distill::TYPE_RAW_OBJECT,
                     Distill::TYPE_RAW_STRING,
                 ])) {
-                    throw new Exception('Unsupported raw type: '.$raw);
-                } elseif ($type === Distill::TYPE_RAW_OBJECT && ! $value instanceof stdClass) {
+                    return true;
+                }
+                if ($type === Distill::TYPE_RAW_OBJECT && ! $value instanceof stdClass) {
                     return true;
                 }
             }
