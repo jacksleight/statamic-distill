@@ -129,13 +129,17 @@ Each item returned includes an `info` object that contains the following values:
 <!-- * **prev** - Previous sibling item in the hierachy.
 * **next** - Next sibling item in the hierachy. -->
 
-### Distill Bard Tag
+### Distill Text Tag & Modifier
+
+The `{{ distill:text }}` tag returns all plain text from `text`, `textarea`, `bard` and  `markdown` fields.
+
+The `distill_text` modifier does the same thing, but must be passed the *name* of the field (as a string), not the field value itself.
+
+### Distill Bard Tag & Modifier
 
 The `{{ distill:bard }}` tag returns all Bard data in a format that is compatible with the `bard_*` modifiers.
 
-### Distill Text Tag
-
-The `{{ distill:text }}` tag returns all plain text from `text`, `textarea`, `bard` and  `markdown` fields.
+The `distill_bard` modifier does the same thing, but must be passed the *name* of the field (as a string), not the field value itself.
 
 ### Distill Count Tag
 
