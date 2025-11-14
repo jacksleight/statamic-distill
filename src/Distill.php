@@ -18,6 +18,8 @@ class Distill
 
     const TYPE_RAW = 'raw';
 
+    const TYPE_CLASS = 'class';
+
     const TYPE_RAW_ARRAY = 'raw:array';
 
     const TYPE_RAW_BOOLEAN = 'raw:boolean';
@@ -31,6 +33,8 @@ class Distill
     const TYPE_RAW_OBJECT = 'raw:object';
 
     const TYPE_RAW_STRING = 'raw:string';
+
+    const TYPE_RAW_UNKNOWN = 'raw:unknown';
 
     const TYPE_ROW = 'row';
 
@@ -55,6 +59,8 @@ class Distill
     const TYPE_VALUE_TERMS = 'value:terms';
 
     const TYPE_VALUE_USERS = 'value:users';
+
+    const TYPE_VALUE_UNKNOWN = 'value:unknown';
 
     const SET_TYPE_BARD = 'bard';
 
