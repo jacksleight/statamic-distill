@@ -2,7 +2,6 @@
 
 namespace JackSleight\StatamicDistill\Items;
 
-use Exception;
 use Illuminate\Support\Collection;
 use JackSleight\StatamicDistill\Distill;
 use Statamic\Contracts\Assets\Asset;
@@ -76,7 +75,11 @@ class Collector
             } elseif ($value instanceof User) {
                 $type = Distill::TYPE_USER;
             } elseif ($value instanceof Value) {
-                $type = Distill::TYPE_VALUE.':'.optional($value->fieldtype())->handle() ?? 'unknown';
+                if ($fieldtype = optional($value->fieldtype())->handle()) {
+                    $type = Distill::TYPE_VALUE.':'.$fieldtype;
+                } else {
+                    $type = Distill::TYPE_VALUE_UNKNOWN;
+                }
             } else {
                 $raw = Str::slug(gettype($value));
                 if ($raw === 'double') {
@@ -92,9 +95,9 @@ class Collector
                     Distill::TYPE_RAW_OBJECT,
                     Distill::TYPE_RAW_STRING,
                 ])) {
-                    throw new Exception('Unsupported raw type: '.$raw);
+                    $type = Distill::TYPE_RAW_UNKNOWN;
                 } elseif ($type === Distill::TYPE_RAW_OBJECT && ! $value instanceof stdClass) {
-                    throw new Exception('Unsupported object type: '.get_class($value));
+                    $type = Distill::TYPE_CLASS.':'.get_class($value);
                 }
             }
         }
@@ -111,12 +114,16 @@ class Collector
 
         $item = $value;
 
-        if ($primary === Distill::TYPE_VALUE || in_array($type, [
+        if (in_array($primary, [
+            Distill::TYPE_VALUE,
+            Distill::TYPE_CLASS,
+        ]) || in_array($type, [
             Distill::TYPE_RAW_BOOLEAN,
             Distill::TYPE_RAW_INTEGER,
             Distill::TYPE_RAW_FLOAT,
             Distill::TYPE_RAW_STRING,
             Distill::TYPE_RAW_NULL,
+            Distill::TYPE_RAW_UNKNOWN,
         ])) {
             $item = ['value' => $item];
         }
