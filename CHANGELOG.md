@@ -2,7 +2,7 @@
 
 ## 1.0.0 (2025-11-19)
 
-- [new] Support any object class and other unknown values 
+- [new] Support all object classes and other unknown values 
 - [new] Support modifiers in Antlers
 
 ## 0.8.5 (2025-11-06)
