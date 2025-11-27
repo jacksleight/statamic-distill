@@ -103,15 +103,16 @@ class Collector
         }
 
         $primary = Str::before($type, ':');
+        $name = Arr::last($path);
         $self = implode('.', $path);
         $info = [
             'type' => $type,
+            'name' => $name,
             'path' => $self,
             'source' => &$this->value,
             'parent' => $this->parent,
             'signature' => $this->generateSignature($primary, $value),
         ];
-
         $item = $value;
 
         if (in_array($primary, [
