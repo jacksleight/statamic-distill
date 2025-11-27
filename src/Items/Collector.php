@@ -314,10 +314,12 @@ class Collector
         $continue = $this->collectValue($item, $path, Distill::TYPE_NODE.':'.$item['type']);
 
         if ($continue) {
-            $continue = $this->collectBardMarks($item['marks'] ?? [], $path, $fieldtype);
+            $current = array_merge($path, ['marks']);
+            $continue = $this->collectBardMarks($item['marks'] ?? [], $current, $fieldtype);
         }
         if ($continue) {
-            $continue = $this->collectBardNodes($item['content'] ?? [], $path, $fieldtype);
+            $current = array_merge($path, ['content']);
+            $continue = $this->collectBardNodes($item['content'] ?? [], $current, $fieldtype);
         }
 
         return $continue;
