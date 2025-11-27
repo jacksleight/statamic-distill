@@ -84,7 +84,7 @@ class Distill
     public function extractBard(ItemCollection $items)
     {
         return $items
-            ->map(fn ($item) => $item->internalValue('value'))
+            ->map(fn ($item) => $item->originalValue('value'))
             ->filter(fn ($value) => $value->fieldtype()->handle() === 'bard')
             ->map->raw()
             ->filter()
@@ -110,7 +110,7 @@ class Distill
     public function extractText(ItemCollection $items)
     {
         return $items
-            ->map(fn ($item) => $item->internalValue('value'))
+            ->map(fn ($item) => $item->originalValue('value'))
             ->map(fn ($value) => match ($value->fieldtype()->handle()) {
                 'text' => $value->value(),
                 'textarea' => $value->value(),
