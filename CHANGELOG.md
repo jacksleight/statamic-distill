@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.0 (2025-11-27)
+
+- [new] Field handle/value index is included in info data 
+- [fix] Bard node paths missing `content` keys
+
 ## 1.0.0 (2025-11-27)
 
 - [new] Support all object classes and other unknown values 

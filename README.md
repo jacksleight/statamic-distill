@@ -123,8 +123,8 @@ Each item returned includes an `info` object that contains the following values:
 
 * **type** - Type of the item.
 * **path** - Path to the item from the source.
-<!-- * **name** - Field name/handle, applies to `value:*` types.
-* **index** - Index of the item, applies to non `value:*` types. -->
+* **name** - Field handle/value index.
+<!-- * **index** - Index of the item, applies to non `value:*` types. -->
 * **source** - Original source value.
 * **parent** - Parent item in the hierachy.
 <!-- * **prev** - Previous sibling item in the hierachy.
