@@ -1,9 +1,10 @@
 # Changelog
 
-## 1.0.0 (2025-11-19)
+## 1.0.0 (2025-11-27)
 
 - [new] Support all object classes and other unknown values 
 - [new] Support modifiers in Antlers
+- Statamic 5+ is now required
 
 ## 0.8.5 (2025-11-06)
 
