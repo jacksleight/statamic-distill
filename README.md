@@ -114,6 +114,8 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The sort order.
 * **include_source (boolean, false)**  
   Whether to include the source value.
+* **include_disabled (boolean, false)**  
+  Whether to include disabled Replicator and Bard sets.
 * **still (string)**  
   Which still to apply, multiple stills can be pipe delimited.
 * **[conditions] (mixed)**  

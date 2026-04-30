@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- [new] `include_disabled` option to include disabled Replicator and Bard sets
+
 ## 1.1.0 (2025-11-27)
 
 - [new] Field handle/value index is included in info data 

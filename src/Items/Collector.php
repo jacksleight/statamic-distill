@@ -250,7 +250,7 @@ class Collector
                 continue;
             }
             $item = $data[$index];
-            if (! Arr::get($item, 'enabled', true)) {
+            if (! $this->query->shouldIncludeDisabled() && ! Arr::get($item, 'enabled', true)) {
                 continue;
             }
             if (empty($augmentedValue = $value->fieldtype()->augment([$item]))) {
@@ -290,7 +290,7 @@ class Collector
             }
             $node = $nodes[$index];
             if ($node['type'] === 'set') {
-                if (! Arr::get($node, 'enabled', true)) {
+                if (! $this->query->shouldIncludeDisabled() && ! Arr::get($node, 'enabled', true)) {
                     continue;
                 }
                 if (empty($augmentedValue = $fieldtype->augment([$node]))) {
