@@ -27,6 +27,8 @@ class Items
 
     protected $includeSource;
 
+    protected $includeDisabled;
+
     protected $depth;
 
     protected $minDepth;
@@ -113,6 +115,9 @@ class Items
         if (isset($this->includeSource)) {
             $query->includeSource($this->includeSource);
         }
+        if (isset($this->includeDisabled)) {
+            $query->includeDisabled($this->includeDisabled);
+        }
         if (isset($this->depth)) {
             $query->depth($this->depth);
         }
@@ -160,6 +165,7 @@ class Items
         $this->path = $this->params->get('path');
         $this->expand = $this->params->get('expand');
         $this->includeSource = $this->params->get('include_source');
+        $this->includeDisabled = $this->params->get('include_disabled');
         $this->depth = $this->params->get('depth');
         $this->minDepth = $this->params->get('minDepth');
         $this->maxDepth = $this->params->get('maxDepth');

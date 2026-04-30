@@ -19,6 +19,8 @@ class QueryBuilder extends IteratorBuilder
 
     protected $includeSource = false;
 
+    protected $includeDisabled = false;
+
     protected $minDepth;
 
     protected $maxDepth;
@@ -52,6 +54,18 @@ class QueryBuilder extends IteratorBuilder
         $this->includeSource = $value;
 
         return $this;
+    }
+
+    public function includeDisabled($value)
+    {
+        $this->includeDisabled = $value;
+
+        return $this;
+    }
+
+    public function shouldIncludeDisabled()
+    {
+        return $this->includeDisabled;
     }
 
     public function depth($value)

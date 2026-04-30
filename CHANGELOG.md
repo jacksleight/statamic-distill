@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- [new] `include_disabled` option to include disabled Replicator and Bard sets
+
 ## 1.1.1 (2025-11-28)
 
 - [fix] Internal value method
