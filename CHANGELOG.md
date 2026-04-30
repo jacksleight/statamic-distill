@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 1.2.0 (2026-04-30)
 
-- [new] `include_disabled` option to include disabled Replicator and Bard sets
+- [new] Option to include disabled replicator and bard sets in results
 
 ## 1.1.1 (2025-11-28)
 
