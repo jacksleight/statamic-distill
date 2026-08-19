@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2.0 (2026-04-30)
+
+- [new] Option to include disabled replicator and bard sets in results
+
+## 1.1.1 (2025-11-28)
+
+- [fix] Internal value method
+
+## 1.1.0 (2025-11-27)
+
+- [new] Field handle/value index is included in info data 
+- [fix] Bard node paths missing `content` keys
+
+## 1.0.0 (2025-11-27)
+
+- [new] Support all object classes and other unknown values 
+- [new] Support modifiers in Antlers
+- Statamic 5+ is now required
+
 ## 0.8.5 (2025-11-06)
 
 - [fix] Unknown double type when passing floats again

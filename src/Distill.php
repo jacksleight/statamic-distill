@@ -18,6 +18,8 @@ class Distill
 
     const TYPE_RAW = 'raw';
 
+    const TYPE_CLASS = 'class';
+
     const TYPE_RAW_ARRAY = 'raw:array';
 
     const TYPE_RAW_BOOLEAN = 'raw:boolean';
@@ -31,6 +33,8 @@ class Distill
     const TYPE_RAW_OBJECT = 'raw:object';
 
     const TYPE_RAW_STRING = 'raw:string';
+
+    const TYPE_RAW_UNKNOWN = 'raw:unknown';
 
     const TYPE_ROW = 'row';
 
@@ -56,6 +60,8 @@ class Distill
 
     const TYPE_VALUE_USERS = 'value:users';
 
+    const TYPE_VALUE_UNKNOWN = 'value:unknown';
+
     const SET_TYPE_BARD = 'bard';
 
     const SET_TYPE_REPLICATOR = 'replicator';
@@ -78,7 +84,7 @@ class Distill
     public function extractBard(ItemCollection $items)
     {
         return $items
-            ->map(fn ($item) => $item->internalValue('value'))
+            ->map(fn ($item) => $item->originalValue('value'))
             ->filter(fn ($value) => $value->fieldtype()->handle() === 'bard')
             ->map->raw()
             ->filter()
@@ -104,7 +110,7 @@ class Distill
     public function extractText(ItemCollection $items)
     {
         return $items
-            ->map(fn ($item) => $item->internalValue('value'))
+            ->map(fn ($item) => $item->originalValue('value'))
             ->map(fn ($value) => match ($value->fieldtype()->handle()) {
                 'text' => $value->value(),
                 'textarea' => $value->value(),

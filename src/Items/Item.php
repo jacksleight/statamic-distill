@@ -83,9 +83,13 @@ class Item implements Arrayable, ArrayAccess, Augmentable, ContainsQueryableValu
         return $value;
     }
 
-    // @todo Remove this when Statamic v4 is dropped and use augmentedValue instead
-    public function internalValue($key)
+    public function originalValue($key)
     {
         return $this->data[$key] ?? null;
+    }
+    
+    public function internalValue($key)
+    {
+        return $this->originalValue($key);
     }
 }

@@ -75,7 +75,8 @@ The `{{ distill:* }}` tag accepts the following parameters:
   * `term:[taxonomy]` - A term
   * `asset:[container]` - An asset
   * `user` - A user
-  * `raw:[php-type]` - A raw value
+  * `raw:[php-type]` - A raw value (inc. stdClass)
+  * `class:[php-class]` - Any other object (exc. stdClass)
 * **path (string|array)**  
   The path to match, asterisks can be used as a wildcard and multiple paths can be pipe delimited, paths themselves are dot delimited.
 * **depth (integer)**  
@@ -113,6 +114,8 @@ The `{{ distill:* }}` tag accepts the following parameters:
   The sort order.
 * **include_source (boolean, false)**  
   Whether to include the source value.
+* **include_disabled (boolean, false)**  
+  Whether to include disabled Replicator and Bard sets.
 * **still (string)**  
   Which still to apply, multiple stills can be pipe delimited.
 * **[conditions] (mixed)**  
@@ -122,20 +125,24 @@ Each item returned includes an `info` object that contains the following values:
 
 * **type** - Type of the item.
 * **path** - Path to the item from the source.
-<!-- * **name** - Field name/handle, applies to `value:*` types.
-* **index** - Index of the item, applies to non `value:*` types. -->
+* **name** - Field handle/value index.
+<!-- * **index** - Index of the item, applies to non `value:*` types. -->
 * **source** - Original source value.
 * **parent** - Parent item in the hierachy.
 <!-- * **prev** - Previous sibling item in the hierachy.
 * **next** - Next sibling item in the hierachy. -->
 
-### Distill Bard Tag
+### Distill Text Tag & Modifier
+
+The `{{ distill:text }}` tag returns all plain text from `text`, `textarea`, `bard` and  `markdown` fields.
+
+The `distill_text` modifier does the same thing, but must be passed the *name* of the field (as a string), not the field value itself.
+
+### Distill Bard Tag & Modifier
 
 The `{{ distill:bard }}` tag returns all Bard data in a format that is compatible with the `bard_*` modifiers.
 
-### Distill Text Tag
-
-The `{{ distill:text }}` tag returns all plain text from `text`, `textarea`, `bard` and  `markdown` fields.
+The `distill_bard` modifier does the same thing, but must be passed the *name* of the field (as a string), not the field value itself.
 
 ### Distill Count Tag
 
