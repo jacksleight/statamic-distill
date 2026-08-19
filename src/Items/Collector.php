@@ -282,17 +282,12 @@ class Collector
             }
             $node = $nodes[$index];
             if ($node['type'] === 'set') {
-                if (! Arr::get($node, 'enabled', true)) {
+                if (Arr::get($node, 'enabled', Arr::get($node, 'attrs.enabled', true)) === false) {
                     continue;
                 }
-                if (empty($augmentedValue = $fieldtype->augment([$node]))) {
+                if (empty($set = $this->bardSetFromNode($node))) {
                     continue;
                 }
-                $set = $augmentedValue[0];
-                if (is_array($set)) {
-                    continue;
-                }
-                $set = $set->getProxiedInstance()->all();
                 $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type'], Distill::SET_TYPE_BARD);
             } else {
                 $continue = $this->collectBardNode($node, $current, $fieldtype);
@@ -300,6 +295,23 @@ class Collector
         }
 
         return $continue;
+    }
+
+    protected function bardSetFromNode(array $node): ?array
+    {
+        $values = Arr::get($node, 'attrs.values');
+
+        if (! is_array($values) || ! isset($values['type'])) {
+            return null;
+        }
+
+        $set = $values;
+
+        if ($id = Arr::get($node, 'attrs.id')) {
+            $set['id'] = $id;
+        }
+
+        return $set;
     }
 
     protected function collectBardNode($item, $path, Bard $fieldtype)

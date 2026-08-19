@@ -5,6 +5,11 @@
             "JackSleight\\StatamicDistill\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "JackSleight\\StatamicDistill\\Tests\\": "tests"
+        }
+    },
     "extra": {
         "statamic": {
             "name": "Distill",
@@ -19,6 +24,14 @@
     },
     "require": {
         "statamic/cms": "^3.4|^4.0|^5.0|^6.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^10.0|^11.0",
+        "phpunit/phpunit": "^11.0|^12.0|^13.0"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     },
     "config": {
         "allow-plugins": {

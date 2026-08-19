@@ -4,3 +4,4 @@ vendor
 node_modules
 mix-manifest.json
 .phpunit.result.cache
+.phpunit.cache
