@@ -2,14 +2,18 @@
 
 namespace JackSleight\StatamicDistill\Items;
 
+use JackSleight\StatamicDistill\Distill;
 use Statamic\Query\IteratorBuilder;
 use Statamic\Support\Arr;
+use Statamic\Support\Str;
 
 class QueryBuilder extends IteratorBuilder
 {
     protected $from;
 
     protected $type;
+
+    protected $typePatterns = [];
 
     protected $path;
 
@@ -36,6 +40,7 @@ class QueryBuilder extends IteratorBuilder
 
     public function type($value)
     {
+        $this->typePatterns = Arr::wrap($value);
         $this->type = $this->matchRegex($value, ':');
 
         return $this;
@@ -170,7 +175,33 @@ class QueryBuilder extends IteratorBuilder
             return false;
         }
 
+        if (isset($this->type) && ! preg_match($this->type, $item->info->type)) {
+            $primary = Str::before($item->info->type, ':');
+
+            if (in_array($primary, [Distill::TYPE_SET, Distill::TYPE_ROW], true) && ! $this->typeFilterCanMatchNestedValues()) {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    protected function typeFilterCanMatchNestedValues(): bool
+    {
+        foreach ($this->typePatterns as $pattern) {
+            $primary = Str::before($pattern, ':');
+
+            if (! in_array($primary, [
+                Distill::TYPE_SET,
+                Distill::TYPE_NODE,
+                Distill::TYPE_MARK,
+                Distill::TYPE_ROW,
+            ], true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function shouldContinue($count)
