@@ -23,6 +23,11 @@ class Info implements Arrayable, ArrayAccess, Augmentable
         return $this->data;
     }
 
+    public function raw($key)
+    {
+        return $this->data[$key] ?? null;
+    }
+
     public function setParent(Item $item)
     {
         return $this->data['parent'] = $item;

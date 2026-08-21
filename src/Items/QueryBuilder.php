@@ -143,15 +143,17 @@ class QueryBuilder extends IteratorBuilder
             return false;
         }
 
-        if ($this->unique && in_array($item->info->signature, $index)) {
+        $info = $item->getSupplement('info');
+
+        if ($this->unique && in_array($info->raw('signature'), $index)) {
             return false;
         }
 
-        if (isset($this->type) && ! preg_match($this->type, $item->info->type)) {
+        if (isset($this->type) && ! preg_match($this->type, $info->raw('type'))) {
             return false;
         }
 
-        if (isset($this->path) && ! preg_match($this->path, $item->info->path)) {
+        if (isset($this->path) && ! preg_match($this->path, $info->raw('path'))) {
             return false;
         }
 
@@ -168,11 +170,13 @@ class QueryBuilder extends IteratorBuilder
             return false;
         }
 
-        if (isset($this->expand) && ! preg_match($this->expand, $item->info->type)) {
+        $info = $item->getSupplement('info');
+
+        if (isset($this->expand) && ! preg_match($this->expand, $info->raw('type'))) {
             return false;
         }
 
-        if (isset($this->chunks) && ! preg_match($this->chunks, $item->info->path)) {
+        if (isset($this->chunks) && ! preg_match($this->chunks, $info->raw('path'))) {
             return false;
         }
 

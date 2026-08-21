@@ -139,7 +139,7 @@ class Collector
 
         if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
-            $this->index[] = $item->info->signature;
+            $this->index[] = $item->getSupplement('info')->raw('signature');
         }
 
         $continue = $this->query->shouldContinue(count($this->items));
