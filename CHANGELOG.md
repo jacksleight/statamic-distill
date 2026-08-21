@@ -2,7 +2,7 @@
 
 ## 1.2.1 (Unreleased)
 
-- [fix] Include disabled sets option had no effect
+- [fix] Include disabled sets option not applying
 - [fix] Bard mark types missing their type name
 
 ## 1.2.0 (2026-04-30)
