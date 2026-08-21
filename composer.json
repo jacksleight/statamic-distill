@@ -5,6 +5,14 @@
             "JackSleight\\StatamicDistill\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        },
+        "files": [
+            "tests/Fixtures.php"
+        ]
+    },
     "extra": {
         "statamic": {
             "name": "Distill",
@@ -20,9 +28,16 @@
     "require": {
         "statamic/cms": "^5.0|^6.0"
     },
+    "require-dev": {
+        "laravel/pint": "^1.21",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^4.0"
+    },
     "config": {
         "allow-plugins": {
-            "pixelfear/composer-dist-plugin": true
+            "pixelfear/composer-dist-plugin": true,
+            "pestphp/pest-plugin": true
         }
     }
 }
