@@ -87,7 +87,7 @@ class Item implements Arrayable, ArrayAccess, Augmentable, ContainsQueryableValu
     {
         return $this->data[$key] ?? null;
     }
-    
+
     public function internalValue($key)
     {
         return $this->originalValue($key);

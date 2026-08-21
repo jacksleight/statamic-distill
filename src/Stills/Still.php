@@ -2,19 +2,20 @@
 
 namespace JackSleight\StatamicDistill\Stills;
 
+use JackSleight\StatamicDistill\Items\QueryBuilder;
 use Statamic\Extend\HasHandle;
 use Statamic\Extend\RegistersItself;
 
 abstract class Still
 {
-    use RegistersItself, HasHandle;
+    use HasHandle, RegistersItself;
 
     protected static $binding = 'distill.stills';
 
     /**
      * Apply the still to a given query builder.
      *
-     * @param  \JackSleight\StatamicDistill\Items\QueryBuilder  $query
+     * @param  QueryBuilder  $query
      * @param  array  $values
      * @return void
      */

@@ -7,8 +7,8 @@ use Statamic\Tags\Concerns;
 
 class Items
 {
-    use Concerns\QueriesOrderBys,
-        Concerns\GetsQueryResults;
+    use Concerns\GetsQueryResults,
+        Concerns\QueriesOrderBys;
     use Concerns\QueriesConditions {
         queryableConditionParams as traitQueryableConditionParams;
     }
