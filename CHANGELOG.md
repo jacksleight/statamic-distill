@@ -1,9 +1,9 @@
 # Changelog
 
-## 1.2.1 (Unreleased)
+## 1.3.0 (Unreleased)
 
-- [perf] Much faster queries that filter by type
-- [fix] Include disabled sets option had no effect
+- [new] Improved query performance
+- [fix] Include disabled sets option not applying
 - [fix] Bard mark types missing their type name
 
 ## 1.2.0 (2026-04-30)
