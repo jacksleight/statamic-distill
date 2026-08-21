@@ -10,7 +10,8 @@
             "Tests\\": "tests"
         },
         "files": [
-            "tests/Fixtures.php"
+            "tests/Fixtures.php",
+            "tests/Performance/Fixtures.php"
         ]
     },
     "extra": {
