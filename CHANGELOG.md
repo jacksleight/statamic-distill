@@ -2,6 +2,7 @@
 
 ## 1.2.1 (Unreleased)
 
+- [perf] Much faster queries that filter by type
 - [fix] Include disabled sets option had no effect
 - [fix] Bard mark types missing their type name
 
