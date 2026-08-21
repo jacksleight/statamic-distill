@@ -4,12 +4,15 @@ namespace JackSleight\StatamicDistill\Items;
 
 use Statamic\Query\IteratorBuilder;
 use Statamic\Support\Arr;
+use Statamic\Support\Str;
 
 class QueryBuilder extends IteratorBuilder
 {
     protected $from;
 
     protected $type;
+
+    protected $primaries;
 
     protected $path;
 
@@ -37,6 +40,9 @@ class QueryBuilder extends IteratorBuilder
     public function type($value)
     {
         $this->type = $this->matchRegex($value, ':');
+        $this->primaries = collect(Arr::wrap($value))
+            ->map(fn ($item) => Str::before($item, ':'))
+            ->all();
 
         return $this;
     }
@@ -171,6 +177,16 @@ class QueryBuilder extends IteratorBuilder
         }
 
         return true;
+    }
+
+    public function couldCollectPrimary($primary)
+    {
+        if (! isset($this->primaries) || ! isset($primary)) {
+            return true;
+        }
+
+        return collect($this->primaries)
+            ->contains(fn ($item) => in_array($item, ['*', '**', $primary]));
     }
 
     public function shouldContinue($count)
