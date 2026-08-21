@@ -37,15 +37,41 @@ it('collects nodes', function () {
     ]);
 });
 
-it('collects marks', function () {
+it('collects marks by type', function () {
     $value = bardWithSets([
         makeParagraph([makeText('Bold', ['bold'])]),
     ]);
 
-    $items = Distill::query($value)->type('mark')->get();
+    $items = Distill::query($value)->type('mark:bold')->get();
 
     expect($items)->toHaveCount(1);
     expect($items->first()->info->path)->toBe('0.content.0.marks.0');
+});
+
+it('collects every mark with a wildcard', function () {
+    $value = bardWithSets([
+        makeParagraph([
+            makeText('Bold', ['bold']),
+            makeText('Italic', ['italic']),
+            makeText('Both', ['bold', 'italic']),
+        ]),
+    ]);
+
+    expect(itemTypes(Distill::query($value)->type('mark:*')->get()))
+        ->toBe(['mark:bold', 'mark:italic', 'mark:bold', 'mark:italic']);
+});
+
+it('collects mark attributes', function () {
+    $value = bardWithSets([
+        makeParagraph([
+            makeText('Link', [['type' => 'link', 'attrs' => ['href' => 'https://example.com']]]),
+        ]),
+    ]);
+
+    $items = Distill::query($value)->type('mark:link')->get();
+
+    expect($items)->toHaveCount(1);
+    expect($items->first()->getQueryableValue('attrs'))->toBe(['href' => 'https://example.com']);
 });
 
 it('collects sets', function () {

@@ -36,7 +36,7 @@ function makeText(string $text, array $marks = []): array
         'type' => 'text',
         'text' => $text,
         'marks' => collect($marks)
-            ->map(fn ($type) => ['type' => $type])
+            ->map(fn ($mark) => is_string($mark) ? ['type' => $mark] : $mark)
             ->all(),
     ]);
 }

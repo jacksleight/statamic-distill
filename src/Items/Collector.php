@@ -352,7 +352,7 @@ class Collector
                 continue;
             }
             $mark = $marks[$index];
-            $continue = $this->collectValue($mark, $current, Distill::TYPE_MARK).':'.$mark['type'];
+            $continue = $this->collectValue($mark, $current, Distill::TYPE_MARK.':'.$mark['type']);
         }
 
         return $continue;
