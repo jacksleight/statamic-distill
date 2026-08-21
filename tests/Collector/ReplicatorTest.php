@@ -78,7 +78,18 @@ it('includes disabled sets when asked', function () {
     ]);
 
     expect(Distill::query($value)->includeDisabled(true)->type('set:second')->get())->toHaveCount(2);
-})->skip('include_disabled (#22) is merged, but Statamic still drops disabled sets during augmentation; the bypass is the unmerged 88f9fb5 on feature/include-disabled-sets');
+});
+
+it('marks included sets as disabled, leaving enabled sets unmarked', function () {
+    $value = replicatorWithSets([
+        makeReplicatorSet('second', ['text_field' => 'On'], enabled: true, id: 'on'),
+        makeReplicatorSet('second', ['text_field' => 'Off'], enabled: false, id: 'off'),
+    ]);
+
+    $items = Distill::query($value)->includeDisabled(true)->type('set:second')->get();
+
+    expect($items->map->getQueryableValue('enabled')->all())->toBe([null, false]);
+});
 
 it('records the parent set on nested items', function () {
     $value = replicatorWithSets([

@@ -122,7 +122,18 @@ it('includes disabled sets when asked', function () {
     ]);
 
     expect(Distill::query($value)->includeDisabled(true)->type('set:outer')->get())->toHaveCount(2);
-})->skip('include_disabled (#22) is merged, but Statamic still drops disabled sets during augmentation; the bypass is the unmerged 88f9fb5 on feature/include-disabled-sets');
+});
+
+it('marks included sets as disabled, leaving enabled sets unmarked', function () {
+    $value = bardWithSets([
+        makeBardSet('outer', ['text_field' => 'On'], enabled: true, id: 'on'),
+        makeBardSet('outer', ['text_field' => 'Off'], enabled: false, id: 'off'),
+    ]);
+
+    $items = Distill::query($value)->includeDisabled(true)->type('set:outer')->get();
+
+    expect($items->map->getQueryableValue('enabled')->all())->toBe([null, false]);
+});
 
 it('collects nothing from a string value', function () {
     $value = bardWithSets('<p>Already HTML</p>');

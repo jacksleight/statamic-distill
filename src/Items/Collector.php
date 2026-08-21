@@ -250,8 +250,12 @@ class Collector
                 continue;
             }
             $item = $data[$index];
-            if (! $this->query->shouldIncludeDisabled() && ! Arr::get($item, 'enabled', true)) {
+            $disabled = Arr::get($item, 'enabled', true) === false;
+            if ($disabled && ! $this->query->shouldIncludeDisabled()) {
                 continue;
+            }
+            if ($disabled) {
+                $item['enabled'] = true;
             }
             if (empty($augmentedValue = $value->fieldtype()->augment([$item]))) {
                 continue;
@@ -261,6 +265,9 @@ class Collector
                 continue;
             }
             $set = $set->getProxiedInstance()->all();
+            if ($disabled) {
+                $set['enabled'] = false;
+            }
             $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type'], Distill::SET_TYPE_REPLICATOR);
         }
 
@@ -290,8 +297,12 @@ class Collector
             }
             $node = $nodes[$index];
             if ($node['type'] === 'set') {
-                if (! $this->query->shouldIncludeDisabled() && ! Arr::get($node, 'enabled', true)) {
+                $disabled = Arr::get($node, 'attrs.enabled', true) === false;
+                if ($disabled && ! $this->query->shouldIncludeDisabled()) {
                     continue;
+                }
+                if ($disabled) {
+                    $node['attrs']['enabled'] = true;
                 }
                 if (empty($augmentedValue = $fieldtype->augment([$node]))) {
                     continue;
@@ -301,6 +312,9 @@ class Collector
                     continue;
                 }
                 $set = $set->getProxiedInstance()->all();
+                if ($disabled) {
+                    $set['enabled'] = false;
+                }
                 $continue = $this->collectValue($set, $current, Distill::TYPE_SET.':'.$set['type'], Distill::SET_TYPE_BARD);
             } else {
                 $continue = $this->collectBardNode($node, $current, $fieldtype);
