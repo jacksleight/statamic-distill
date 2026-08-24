@@ -139,7 +139,7 @@ class Collector
 
         if ($this->query->shouldCollect($item, $depth, $this->index)) {
             $this->items[] = $item;
-            $this->index[] = $item->info->signature;
+            $this->index[] = $item->getSupplement('info')->raw('signature');
         }
 
         $continue = $this->query->shouldContinue(count($this->items));
@@ -216,6 +216,10 @@ class Collector
 
     protected function collectRelationships(Value $value, $path)
     {
+        if (! $this->query->couldCollectPrimary($this->relationshipPrimary($value))) {
+            return true;
+        }
+
         $data = Arr::wrap($value->raw()) ?? [];
         $stack = array_keys($data);
 
@@ -235,6 +239,17 @@ class Collector
         }
 
         return $continue;
+    }
+
+    protected function relationshipPrimary(Value $value)
+    {
+        return match ($value->fieldtype()->handle()) {
+            'entries' => Distill::TYPE_ENTRY,
+            'terms' => Distill::TYPE_TERM,
+            'assets' => Distill::TYPE_ASSET,
+            'users' => Distill::TYPE_USER,
+            default => null,
+        };
     }
 
     protected function collectReplicator(Value $value, $path)
