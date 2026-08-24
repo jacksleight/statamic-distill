@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.3.0 (Unreleased)
+## 1.3.0 (2026-08-24)
 
 - [new] Improved query performance
 - [fix] Include disabled sets option not applying
